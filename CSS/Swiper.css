@@ -1,0 +1,42 @@
+.slide-bg {
+  background: #fffaf8;
+}
+
+.slide-img {
+  width: 100%;
+  height: auto;
+  display: block; 
+}
+
+.hero-slider {
+	/* เมธอด: กล่องสไลด์ฮีโร่ ขอบมน มีเงา */
+	margin: 18px 0;
+	border-radius: 24px;
+	overflow: hidden;
+	box-shadow: var(--shadow)
+}
+
+.hero-slider .swiper-slide {
+	/* เมธอด: จัดให้สไลด์แต่ละภาพกลางกล่อง และมีความสูงขั้นต่ำ */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 320px;
+	background: #f6fbff
+}
+
+.swiper-button-prev, .swiper-button-next {
+	/* เมธอด: สีปุ่มนำทางของสไลด์ */
+	color: #333
+}
+
+.swiper-pagination-bullet {
+	/* เมธอด: จุดบอกหน้าในเพจิเนชัน (สีเทา) */
+	background: #ccc;
+	opacity: 1
+}
+
+.swiper-pagination-bullet-active {
+	/* เมธอด: จุดที่กำลังแอคทีฟ (สีเข้มกว่า) */
+	background: #333
+}

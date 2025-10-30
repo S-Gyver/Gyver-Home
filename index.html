@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gyver Home — Pinkoi-style</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="CSS/Head.css">
+  <link rel="stylesheet" href="CSS/Swiper.css">
+  <link rel="stylesheet" href="CSS/index.css">
+</head>
+
+<body>
+  <header class="header">
+    <div class="wrap header-in">
+      <a href="index.html" class="logo">S GYVER</a>
+
+      <!-- เมธอด: ฟอร์มค้นหา — onsubmit กันรีเฟรชหน้า (เดโม) ให้ JS ไปจัดการแทน -->
+      <form class="search" action="catalog.html" method="GET">
+        <input type="search" placeholder="เช่น หิ้งพระ" aria-label="ค้นหาสินค้า" name="q">
+        <button type="submit" aria-label="ปุ่มค้นหา">ค้นหา</button>
+      </form>
+
+      <!-- เมธอด: ลิงก์ลัดมุมขวา (บัญชี, รายการโปรด, ตะกร้า) -->
+      <nav class="quick" aria-label="เมนูลัด">
+        <a href="Log-in.html">เข้าสู่ระบบ</a>
+        <a href="Favorites.html">รายการโปรด</a>
+        <a href="Cart.html" class="cart" aria-live="polite">ตะกร้า (0)</a>
+      </nav>
+    </div>
+
+    <!-- เมธอด: เมนูหลักแบบชิป (จัดหมวดหมู่) -->
+    <div class="menu wrap" role="navigation" aria-label="เมนูหลัก">
+      <a href="index.html">ของแต่งบ้าน</a>
+      <a href="Catalog.html">สินค้า</a>
+      <a href="Catalog-3d.html">3D</a>
+      <a href="Sale-Product.html">ลดราคา</a>
+      <a href="Gallery.html">แกลลอรี่</a>
+      <a href="Contact.html">ติดต่อ</a>
+    </div>
+  </header>
+
+  <main class="wrap ww">
+    <!-- เมธอด: สไลด์ฮีโร่ ใช้โครงสร้าง .swiper > .swiper-wrapper > .swiper-slide -->
+    <section class="hero-slider" aria-label="โปรโมชั่นและแบนเนอร์">
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          <!-- เมธอด: สไลด์แต่ละใบควรใส่ alt อธิบายภาพสั้นๆ -->
+          <div class="swiper-slide slide-bg">
+            <img class="slide-img" src="image/Banner/banner1.png" alt="แบนเนอร์ 1">
+          </div>
+          <div class="swiper-slide slide-bg">
+            <img class="slide-img" src="image/Banner/banner2.png" alt="แบนเนอร์ 2">
+          </div>
+          <div class="swiper-slide slide-bg">
+            <img class="slide-img" src="image/Banner/banner3.png" alt="แบนเนอร์ 3">
+          </div>
+        </div>
+        <!-- เมธอด: จุดบอกหน้าและปุ่มนำทางของ Swiper -->
+        <div class="swiper-pagination" aria-label="ตำแหน่งสไลด์"></div>
+        <div class="swiper-button-prev" aria-label="สไลด์ก่อนหน้า"></div>
+        <div class="swiper-button-next" aria-label="สไลด์ถัดไป"></div>
+      </div>
+    </section>
+
+    <div class="section">
+      <h2>ของแต่งบ้าน</h2><a href="Catalog.html">ดูทั้งหมด</a>
+    </div>
+
+    <!-- การ์ด 5 อัน -->
+    <div id="product-grid-container" class="product-grid-container">
+    </div>
+
+
+    <hr>
+
+    <div class="section">
+      <h2>สินค้าแนะนำ</h2><a href="Catalog.html">ดูทั้งหมด</a>
+    </div>
+
+    <div id="recommended-grid-container" class="product-grid-container">
+    </div>
+
+    <hr>
+
+    <div class="mto">
+      <p><strong>สั่งทำ (Made-to-Order)</strong> — เลือกวัสดุ/ขนาด/สี ให้เข้าบ้านคุณได้เลย ส่งร่างแบบก่อนผลิต</p>
+      <button class="btn">เริ่มสั่งทำ</button>
+    </div>
+
+    <hr>
+
+    <div class="mto">
+      <div><strong>รับคูปอง 100.-</strong> เมื่อสมัครรับข่าวสารสไตล์ & โปรใหม่</div>
+      <button class="btn primary">สมัคร</button>
+      </form>
+    </div>
+
+    <hr>
+
+    <footer>
+      <div class="footer">© 2025 Gyver Home · งานออกแบบทำมือ / รับสั่งทำ · ติดต่อ: Sgyver36@gmail.com</div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="JS/index.js"></script>
+    <script src="JS/Swiper.js"></script>
+</body>
+
+</html>

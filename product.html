@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gyver Home — Product</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="CSS/Head.css">
+  <link rel="stylesheet" href="CSS/Product.css">
+</head>
+
+<body>
+
+  <header class="ca">
+    <div class="wrapHead header-in">
+      <a href="index.html" class="logo">S GYVER</a>
+
+      <!-- ค้นหา -->
+      <form class="search" action="catalog.html" method="GET">
+        <input type="search" placeholder="เช่น หิ้งพระ" aria-label="ค้นหาสินค้า" name="q">
+        <button type="submit" aria-label="ปุ่มค้นหา">ค้นหา</button>
+      </form>
+
+      <!-- ลิงก์ลัด -->
+      <nav class="quick" aria-label="เมนูลัด">
+        <a href="Log-in.html">เข้าสู่ระบบ</a>
+        <a href="Favorites.html">รายการโปรด</a>
+        <a href="Cart.html" class="cart" aria-live="polite">ตะกร้า (0)</a>
+      </nav>
+    </div>
+
+    <!-- เมนูหลัก -->
+    <div class="menu wrapHead" role="navigation" aria-label="เมนูหลัก">
+      <a href="index.html">ของแต่งบ้าน</a>
+      <a href="Catalog.html">สินค้า</a>
+      <a href="Catalog-3d.html">3D</a>
+      <a href="Sale-Product.html">ลดราคา</a>
+      <a href="Gallery.html">แกลลอรี่</a>
+      <a href="Contact.html">ติดต่อ</a>
+    </div>
+  </header>
+
+  <main class="wrap product-layout">
+    <!-- ซ้าย: รูปสินค้า -->
+    <section class="gallery">
+      <div class="preview">
+
+        <img id="mainImg" alt="">
+      </div>
+
+      <div class="thumbs" id="thumbs"><!-- ใส่ด้วย JS --></div>
+
+      <div class="share">
+        <span class="shareLabel">แชร์:</span>
+        <button class="icon" data-share="fb" aria-label="แชร์ Facebook">f</button>
+        <button class="icon" data-share="x" aria-label="แชร์ X">x</button>
+        <button class="icon" data-share="line" aria-label="แชร์ LINE">L</button>
+        <button class="icon ghost" id="copyLink">คัดลอกลิงก์</button>
+      </div>
+    </section>
+
+    <!-- ขวา: ข้อมูลสินค้า -->
+    <section class="info">
+      <h1 class="title" id="pTitle">ชื่อสินค้า</h1>
+
+      <div class="metaRating">
+        <span class="stars" aria-label="เรตติ้ง">★★★★★</span>
+        <span class="muted" id="pRating">4.8</span>
+        <span class="sep">|</span>
+        <a href="#" class="muted" id="pReviews">รีวิว 0</a>
+        <span class="sep">|</span>
+        <span class="muted" id="pSold">ขายแล้ว 0</span>
+      </div>
+
+      <!-- กล่องราคา -->
+      <div class="priceBox">
+        <div class="priceLine">
+          <span id="priceMain" class="main">฿69</span>
+          <span id="priceStrike" class="strike">฿129</span>
+          <span id="badgeOff" class="badge">-47%</span>
+        </div>
+      </div>
+
+      <!-- ตัวเลือกสินค้า/variant -->
+      <div id="variantBox" class="variant-group">
+        <div class="labelRow">ตัวเลือกสินค้า:</div>
+        <div id="variantOptions" class="chips">
+          <!-- ตัวอย่างชิป -->
+          <!-- <button class="chipOption active">40 ซม.</button> -->
+        </div>
+      </div>
+
+      <!-- จัดส่ง -->
+      <div class="metaRow">
+        <div class="label">การจัดส่ง:</div>
+        <div>
+          <strong>จัดส่งเร็ว</strong> ถึงบ้านคุณภายใน 2–4 วันทำการ
+          <div class="muted small">ค่าจัดส่ง เริ่มต้น 30–45 บาท</div>
+        </div>
+      </div>
+
+      <!-- จำนวน -->
+      <div class="metaRow">
+        <div class="label">จำนวน:</div>
+        <div class="qty">
+          <button class="qbtn" data-act="minus">−</button>
+          <input id="qty" min="1" value="1" inputmode="numeric">
+          <button class="qbtn" data-act="plus">+</button>
+          <span class="muted small" id="pStockHint">พร้อมส่ง</span>
+        </div>
+      </div>
+
+      <!-- ปุ่ม CTA -->
+      <div class="ctaRow">
+        <button class="btn ghost" id="chat">แชตกับร้าน</button>
+        <button class="btn" id="addCart">หยิบลงตะกร้า</button>
+        <button class="btn primary" id="buyNow">ซื้อสินค้า</button>
+      </div>
+
+      <!-- การันตี -->
+      <div class="trust">
+        <div class="item">
+          <strong class="LL">คืนสินค้าได้</strong>
+          <div class="muted small">ภายใน 7 วัน (ตามเงื่อนไข)</div>
+        </div>
+        <div class="item">
+          <strong class="LL">รับประกันงานไม้</strong>
+          <div class="muted small">30 วัน</div>
+        </div>
+        <div class="item">
+          <strong class="LL">โค้ดส่วนลด</strong>
+          <div class="muted small">เช็คหน้าโปรโมชัน</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- รายละเอียดด้านล่าง -->
+  <section class="wrap columns">
+
+    <aside class="spec">
+      <h2>ข้อมูลสินค้า</h2>
+      <dl class="specTable">
+        <div>
+          <dt>หมวดหมู่</dt>
+          <dd id="product-categories">—</dd>
+        </div>
+        <div>
+          <dt>คลัง</dt>
+          <dd id="product-stock">—</dd>
+        </div>
+        <div>
+          <dt>วัสดุ</dt>
+          <dd>ไม้สน</dd>
+        </div>
+        <div>
+          <dt>แหล่งผลิต</dt>
+          <dd>นนทบุรี</dd>
+        </div>
+      </dl>
+    </aside>
+
+    <article class="desc">
+      <h2>รายละเอียดสินค้า</h2>
+      <div class="content" id="product-description">
+        กำลังโหลดรายละเอียดสินค้า…
+      </div>
+    </article>
+
+  </section>
+
+  <hr>
+     <footer>
+      <div class="ff">© 2025 Gyver Home · งานออกแบบทำมือ / รับสั่งทำ · ติดต่อ: Sgyver36@gmail.com</div>
+    </footer>
+    
+
+  <script src="JS/product.js"></script>
+</body>
+
+</html>

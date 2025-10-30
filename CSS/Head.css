@@ -1,0 +1,147 @@
+:root {
+	/* เมธอด: ตัวแปรธีมรวม ใช้ตั้งค่าสี เงา และรัศมีมุม เพื่อเปลี่ยนโทนทั้งเว็บจากจุดเดียว */
+	--bg: #FAFAFC;
+	--card: #fff;
+	--ink: #1b1b1f;
+	--muted: #6b6b6f;
+	--brand: #ff6f59;
+	--brand-2: #7cc5b3;
+	--line: #ececf0;
+	--chip: #f3f4f8;
+	--chip-ink: #334;
+	--radius: 14px;
+	--shadow: 0 6px 24px rgba(0,0,0,.06);
+}
+
+.wrapHead {
+	/* เมธอด: คอนเทนเนอร์กึ่งกลางหน้ากว้างจำกัด + ระยะขอบด้านข้าง */
+	max-width: 1200px;
+	margin: auto;
+
+}
+
+/* ====================== Header ====================== */
+.header {
+	/* เมธอด: ทำแถบหัวติดบนสุดแบบโปร่งเบลอ และมีเส้นคั่นด้านล่าง */
+	position: sticky;
+	top: 0;
+	z-index: 40;
+	background: rgba(255,255,255,.8);
+	backdrop-filter: saturate(180%) blur(14px);
+	border-bottom: 1px solid var(--line);
+	padding : 0 50px 0 50px;
+}
+
+.ca{
+	/* เมธอด: ทำแถบหัวติดบนสุดแบบโปร่งเบลอ และมีเส้นคั่นด้านล่าง */
+	z-index: 40;
+	background: rgba(255,255,255,.8);
+	backdrop-filter: saturate(180%) blur(14px);
+	border-bottom: 1px solid var(--line);
+	padding : 0 50px 0 50px;
+}
+
+.header-in {
+	/* เมธอด: จัดกริดหัวเว็บ 3 คอลัมน์ = โลโก้ | ค้นหา | ลิงก์ด่วน */
+	display: grid;
+	grid-template-columns: 160px 1fr auto; /* โลโก้ | ค้นหา | ลิงก์ด่วน */
+	grid-auto-rows: auto;
+	gap: 14px;
+	align-items: center;
+	padding: 10px 50px 0 50px;
+}
+
+.logo {
+	/* เมธอด: โลโก้แบรนด์ให้เด่นด้วยน้ำหนักหนาและสีแบรนด์ */
+	font-weight: 800;
+	letter-spacing: .4px;
+	color: var(--brand);
+	font-size: 22px
+}
+
+.search {
+	 display: flex;
+    align-items: center;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;      /* เดิมเป็น #fff ตอนนี้ให้โปร่ง */
+    margin-bottom: 0;
+    padding: 0;                    /* กันไม่ให้เกิดแถบสีข้างใน */
+    overflow: hidden;              /* บังคับมุมโค้งให้เนียน */
+}
+
+.search input {
+	/* ช่องพิมพ์: ให้เป็นพื้นขาวเอง ไม่เอาฟ้าจาก wrapper */
+    flex: 1;
+    border: 0;
+    padding: 12px 14px;
+    outline: 0;
+    font-size: 15px;
+    background: #fff;              /* เดิมเป็น transparent */
+    border-radius: 0;              /* ปล่อยให้ overflow: hidden ของ .search จัดมุม */
+    box-shadow: none;
+}
+
+.search button {
+	/* เมธอด: ปุ่มค้นหาพื้นหลังสีแบรนด์ มุมขวากลม */
+	border: 0;
+	background: var(--brand);
+	color: #fff;
+	padding: 10px 16px;
+	cursor: pointer;
+	border-top-right-radius: 999px; /* มุมขวาบนโค้ง */
+	border-bottom-right-radius: 999px; /* มุมขวาล่างโค้ง */
+}
+
+.quick a {
+	/* เมธอด: ลิงก์ด่วนด้านขวาเว้นระยะซ้ายเล็กน้อย */
+	margin-left: 10px;
+	color: #333
+}
+
+.quick .cart {
+	/* เมธอด: ป้ายตะกร้าให้ดูเป็นชิป */
+	background: var(--chip);
+	padding: 8px 12px;
+	border-radius: 10px
+}
+
+.chip {
+	/* เมธอด: ปุ่มชิปแบบโค้ง คลิกได้ มีเส้นขอบอ่อน */
+	background: var(--chip);
+	color: var(--chip-ink);
+	border-radius: 999px;
+	padding: 4px 8px;
+	font-size: 12px;
+	cursor: pointer;
+	border: 1px solid var(--line)
+}
+
+.chip:hover {
+	/* เมธอด: ไฮไลต์ชิปเมื่อโฮเวอร์ด้วยเส้นขอบชัดขึ้น */
+	outline: 2px solid #e8e9ef
+}
+
+/* ====================== เมนูหลัก (chips) ====================== */
+.menu {
+	/* เมธอด: เมนูแนวนอนแบบชิป มีเส้นคั่นด้านล่าง */
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding: 10px 50px 10px 50px;
+}
+
+.menu a {
+	/* เมธอด: สไตล์ปุ่มเมนูหลัก ให้ตัวหนาเล็กน้อย */
+	background: var(--chip);
+	color: var(--chip-ink);
+	padding: 8px 12px;
+	border-radius: 999px;
+	font-weight: 600;
+	font-size: 14px
+}
+
+.menu a:hover {
+	/* เมธอด: เพิ่มกรอบเมื่อโฮเวอร์ */
+	outline: 2px solid #e8e9ef
+}

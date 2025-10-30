@@ -1,0 +1,67 @@
+.cata {
+    margin: 20px 50px 0 50px;
+}
+
+.meta {
+    color: var(--muted);
+    font-size: 12.5px;
+    margin: 3px 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.card .meta {
+    color: var(--muted);
+    font-size: 12.5px;
+    margin: 3px 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.star {
+    color: #f59e0b;
+}
+
+.card .meta .dot {
+    opacity: .6;
+}
+
+.price-line{
+  display:flex;
+  align-items:baseline;
+  gap:6px;
+  margin:8px 2px 0;
+}
+.price-current{
+  font-size:15px;
+  font-weight:800;
+  color: red;
+  letter-spacing:.2px;
+  background:#e6eca9;
+  padding:2px 6px;
+  line-height:1.4;
+  border-top-left-radius: 999px;
+  border-bottom-left-radius: 999px;
+}
+.price-old{
+  font-size:15px;
+  color:#000000;
+  text-decoration:line-through;
+  background:#e6eca9;
+  padding:2px 6px;
+  line-height:1.4;
+  border-top-right-radius: 999px;
+  border-bottom-right-radius: 999px;
+}
+.discount-badge{
+  margin-left:auto;
+  font-size:11px;
+  font-weight:700;
+  background:#e6eca9;
+  color: red;
+  padding:2px 6px;
+  border-radius:999px;
+  line-height:1.4;
+}
