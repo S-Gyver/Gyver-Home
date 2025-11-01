@@ -28,7 +28,7 @@ function getQueryParams() {
 async function loadCatalog() {
   try {
     // (ถูกต้อง!) ดึง "Outlet.json"
-    const response = await fetch('JSON/Outlet.json');
+    const response = await fetch('JSON/outlet.json');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
