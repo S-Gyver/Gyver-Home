@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three.js - บ้านแมว 3D (2 คอลัมน์)</title>
+
+  <link rel="stylesheet" href="CSS/3d-measure.css">
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+  <div class="main-layout-container">
+
+    <header class="top-header">
+      <div class="header-left">
+        <span class="product-id">D001</span>
+        <span class="product-name">บ้านแมว</span>
+      </div>
+      <div class="header-right">
+        <a href="#" class="btn-catalog">กลับไปหน้า Catalog</a>
+      </div>
+    </header>
+
+    <main class="main-content">
+
+      <div class="light-control">
+
+        <button id="reset-camera-btn">รีเซ็ตกล้อง</button>
+
+        <button id="measure-toggle-btn">เปิดตลับเมตร</button>
+        <button id="measure-clear-btn">ล้างค่า</button>
+
+        <label for="light-slider">ปรับแสง</label>
+
+        <input type="range" id="light-slider" min="0.0" max="14.0" step="0.1" value="4.0">
+
+      </div>
+
+      <div id="canvas-container"></div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-block red-header">
+        <h3>ข้อมูลสินค้า</h3>
+      </div>
+      <div class="sidebar-block">
+        <p><strong>หมวดหมู่:</strong> <span id="info-category">-</span></p>
+        <p><strong>วัสดุ:</strong> <span id="info-material">-</span></p>
+      </div>
+      <div class="sidebar-block red-header">
+        <h3>รายละเอียด</h3>
+      </div>
+      <div class="sidebar-block">
+        <p><span id="info-description">-</span></p>
+      </div>
+
+      <div class="sidebar-block red-header">
+        <h3>ราคา</h3>
+      </div>
+      <div class="sidebar-block" id="price-block">
+        <p id="price-regular"></p>
+        <p id="price-special"></p>
+       
+    </aside>
+
+
+
+  </div>
+  <script type="module" src="JS/3d-measure.js"></script>
+
+</body>
+
+</html>

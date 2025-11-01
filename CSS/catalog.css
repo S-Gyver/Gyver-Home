@@ -35,7 +35,7 @@
   margin:8px 2px 0;
 }
 .price-current{
-  font-size:15px;
+  font-size:13px;
   font-weight:800;
   color: red;
   letter-spacing:.2px;
@@ -46,7 +46,7 @@
   border-bottom-left-radius: 999px;
 }
 .price-old{
-  font-size:15px;
+  font-size:13px;
   color:#000000;
   text-decoration:line-through;
   background:#e6eca9;

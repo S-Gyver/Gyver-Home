@@ -1,0 +1,125 @@
+[
+  {
+    "id": "A001",
+    "name": "หิ้งพระ",
+    "category": [
+      "หิ้งพระ",
+      "ไม้จริง"
+    ],
+    "material": "ไม้สน",
+    "price": 1990,
+    "salePrice": 750,
+    "currency": "THB",
+    "reason": "สินค้าตีกลับ",
+    "grade": "สภาพดีมาก",
+    "stock": 1,
+    "images": [
+      "image/Outlet/A001/A001-01.jpg",
+      "image/Outlet/A001/A001-02.jpg",
+      "image/Outlet/A001/A001-03.jpg",
+      "image/Outlet/A001/A001-04.jpg",
+      "image/Outlet/A001/A001-05.jpg",
+      "image/Outlet/A001/A001-06.jpg"
+    ],
+    "desc": "หิ้งพระ ทำจากไม้สน เป็นสินค้าตีกลับ สภาพดีมาก \r\n\r\n ขนาดตามแบบ \r\n - กว้าง 80 cm. \r\n - สูง 60 cm. \r\n  - ลึก 40 cm."
+  },
+  {
+    "id": "A002",
+    "name": "ถาดไม้",
+    "category": [
+      "ถาดไม้",
+      "ไม้จริง"
+    ],
+    "material": "ไม้ยางพารา",
+    "price": 490,
+    "salePrice": 100,
+    "currency": "THB",
+    "reason": "สินค้าตีกลับ",
+    "grade": "สภาพดีมาก",
+    "stock": 1,
+    "images": [
+      "image/Outlet/A002/A002-01.jpg",
+      "image/Outlet/A002/A002-02.jpg",
+      "image/Outlet/A002/A002-03.jpg",
+      "image/Outlet/A002/A002-04.jpg",
+      "image/Outlet/A002/A002-05.jpg",
+      "image/Outlet/A002/A002-06.jpg"
+    ],
+    "desc": "ถาดไม้ หรืออยากให้ลงสีหรือปรับขนาดก็สามารถปรับได้ \r\n\r\n ขนาดตามแบบ \r\n เส้นผ่าศูนย์กลาง 80 cm. x ลึก 15 cm"
+  },
+  {
+    "id": "A003",
+    "name": "บอร์ดหมุด",
+    "category": [
+      "บอร์ด",
+      "ไม้จริง"
+    ],
+    "material": "ไม้สน",
+    "price": 450,
+    "salePrice": 100,
+    "currency": "THB",
+    "reason": "สินค้าตีกลับ",
+    "grade": "สภาพดีมาก",
+    "stock": 1,
+    "images": [
+      "image/Outlet/A003/A003-01.jpg",
+      "image/Outlet/A003/A003-02.jpg",
+      "image/Outlet/A003/A003-03.jpg",
+      "image/Outlet/A003/A003-04.jpg",
+      "image/Outlet/A003/A003-05.jpg",
+      "image/Outlet/A003/A003-06.jpg",
+      "image/Outlet/A003/A003-07.jpg",
+      "image/Outlet/A003/A003-08.jpg",
+      "image/Outlet/A003/A003-09.jpg"
+    ],
+    "desc": "บอร์ดหมุด สามารถลงสีตามความต้องการและสามารถปรับขนาดได้ \r\n\r\n ขนาดตามแบบ \r\n - กว้าง 155 cm. \r\n - สูง 137 cm. \r\n  - ลึก 80 cm."
+  },
+  {
+    "id": "A004",
+    "name": "เสาไม้แขวน",
+    "category": [
+      "เสาไม้แขวน",
+      "ไม้จริง"
+    ],
+    "material": "ไม้สน",
+    "price": 1990,
+    "salePrice": 500,
+    "currency": "THB",
+    "reason": "สินค้าตีกลับ",
+    "grade": "สภาพดีมาก",
+    "stock": 1,
+    "images": [
+      "image/Outlet/A004/A004-01.jpg",
+      "image/Outlet/A004/A004-02.jpg",
+      "image/Outlet/A004/A004-03.jpg",
+      "image/Outlet/A004/A004-04.jpg",
+      "image/Outlet/A004/A004-05.jpg",
+      "image/Outlet/A004/A004-06.jpg",
+      "image/Outlet/A004/A004-07.jpg",
+      "image/Outlet/A004/A004-08.jpg"
+    ],
+    "desc": "เสาไม้แขวน หรืออยากให้ลงสีหรือปรับขนาดก็สามารถปรับได้ \r\n\r\n ขนาดตามแบบ \r\n - กว้าง 150 cm. \r\n - สูง 140 cm. \r\n  - ลึก 20 cm."
+  },
+  {
+    "id": "A005",
+    "name": "กล่องไม้",
+    "category": [
+      "กล่องไม้",
+      "ไม้จริง"
+    ],
+    "material": "ไม้สน",
+    "price": 159,
+    "salePrice": 59,
+    "currency": "THB",
+    "reason": "สินค้าตีกลับ",
+    "grade": "สภาพดีมาก",
+    "stock": 1,
+    "images": [
+      "image/Outlet/A005/A005-01.jpg",
+      "image/Outlet/A005/A005-02.jpg",
+      "image/Outlet/A005/A005-03.jpg",
+      "image/Outlet/A005/A005-04.jpg"
+    ],
+    "desc": "กล่องไม้ หรืออยากให้ลงสีหรือปรับขนาดก็สามารถปรับได้ \r\n\r\n ขนาดตามแบบ \r\n - กว้าง 150 cm. \r\n - สูง 140 cm. \r\n  - ลึก 20 cm."
+  }
+]

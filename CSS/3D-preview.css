@@ -1,0 +1,316 @@
+/* ================== 1. Base & Reset ================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body,
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  height: 100%;
+}
+
+/* ================== 2. Layout (The Grid) ================== */
+.product-viewer-layout {
+  display: grid;
+  /* กำหนด 2 คอลัมน์: Viewer (3 ส่วน) และ Sidebar (1 ส่วน) */
+  grid-template-columns: 3fr 1fr;
+  /* กำหนด 2 แถว: Header (auto) และ Content (ที่เหลือ) */
+  grid-template-rows: auto 1fr;
+  /* กำหนดพื้นที่ */
+  grid-template-areas:
+    "header header"
+    "viewer sidebar";
+  height: 100vh; /* ให้เต็มความสูงจอ */
+  overflow: hidden; /* กันแถบเลื่อนที่ไม่จำเป็น */
+}
+
+/* กำหนดให้แต่ละส่วนไปอยู่ในพื้นที่ของตัวเอง */
+.pv-header {
+  grid-area: header;
+}
+.pv-viewer {
+  grid-area: viewer;
+}
+.pv-sidebar {
+  grid-area: sidebar;
+}
+
+/* ================== 3. Header Styles ================== */
+.pv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+}
+.pv-header .header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.pv-header .logo-3d {
+  background-color: #f97316; /* สีส้ม */
+  color: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+.pv-header .product-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+.pv-header .header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ================== 4. Viewer Styles ================== */
+.pv-viewer {
+  background-color: #e5e7eb; /* สีพื้นหลังตัว viewer (เหมือนในรูป) */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow: hidden; /* กันโมเดลล้น */
+}
+
+/* นี่คือตัว 3D viewer เอง */
+model-viewer {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+/* ================== 5. Sidebar Styles ================== */
+.pv-sidebar {
+  background-color: #f9fafb; /* สีพื้นหลัง Sidebar */
+  padding: 24px;
+  border-left: 1px solid #e0e0e0;
+  overflow-y: auto; /* ถ้าข้อมูลยาว ให้เลื่อนได้เฉพาะส่วนนี้ */
+}
+
+.info-box {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: hidden; /* ซ่อนขอบ h3 ที่เกินมา */
+}
+.info-box h3 {
+  background-color: #ef4444; /* สีแดง */
+  color: white;
+  padding: 12px 16px;
+  font-size: 1rem;
+}
+.info-box ul {
+  list-style: none;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+.info-box ul li {
+  display: flex;
+  justify-content: space-between;
+}
+.info-box ul li strong {
+  color: #555;
+}
+.info-box p {
+  padding: 16px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* ================== 6. Responsive (สำหรับมือถือ) ================== */
+@media (max-width: 800px) {
+  .product-viewer-layout {
+    /* เปลี่ยนเป็น 1 คอลัมน์ */
+    grid-template-columns: 1fr;
+    /* เรียงลำดับใหม่: Header, Viewer, Sidebar */
+    grid-template-areas:
+      "header"
+      "viewer"
+      "sidebar";
+    /* ให้ Viewer สูง 60% ของจอ, ที่เหลือเป็น Auto */
+    grid-template-rows: auto 60vh auto;
+    height: auto; /* ปล่อยความสูงไปตามเนื้อหา */
+    overflow: auto; /* ให้เลื่อนได้ทั้งหน้า */
+  }
+  .pv-viewer {
+    min-height: 400px; /* การันตีความสูงขั้นต่ำ */
+  }
+  .pv-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+product-viewer-layout {
+  display: grid;
+  grid-template-columns: 3fr 1fr; /* 3 ส่วนสำหรับ viewer, 1 ส่วนสำหรับ sidebar */
+  grid-template-rows: auto 1fr; /* แถวบน auto, แถวล่าง (content) 1fr (ที่เหลือทั้งหมด) */
+  grid-template-areas:
+    "header header"
+    "viewer sidebar";
+  height: 100vh; /* ให้เต็มความสูงจอ */
+  width: 100vw;  /* ให้เต็มความกว้างจอ */
+}
+
+/* กำหนดให้แต่ละส่วนไปอยู่ในพื้นที่ของตัวเอง */
+.pv-header { grid-area: header; }
+.pv-viewer { grid-area: viewer; }
+.pv-sidebar { grid-area: sidebar; }
+
+/* ================== 2. Header Styles ================== */
+.pv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  /* (ใช้ .logo จาก Head.css ได้เลย) */
+}
+.pv-header .header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.pv-header .logo-3d {
+  background-color: #f97316; /* สีส้ม */
+  color: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+.pv-header .product-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0; /* Override default h1 margin */
+}
+.pv-header .header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.pv-header .back-button {
+  font-size: 0.9rem;
+  color: var(--primary-text);
+  text-decoration: underline;
+}
+
+/* ================== 3. Viewer Styles ================== */
+.pv-viewer {
+  background-color: #e5e7eb; /* สีพื้นหลังตัว viewer */
+  padding: 20px;
+  overflow: hidden; 
+  position: relative;
+}
+
+model-viewer {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+/* ================== 4. Sidebar Styles ================== */
+.pv-sidebar {
+  background-color: #f9fafb; /* สีพื้นหลัง Sidebar */
+  padding: 24px;
+  border-left: 1px solid #e0e0e0;
+  overflow-y: auto; /* ถ้าข้อมูลยาว ให้เลื่อนได้เฉพาะส่วนนี้ */
+  height: calc(100vh - 70px); /* (ปรับ 70px ถ้า header สูงไม่เท่า) */
+}
+
+.info-box {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: hidden; 
+}
+.info-box h3 {
+  background-color: #ef4444; /* สีแดง */
+  color: white;
+  padding: 12px 16px;
+  font-size: 1rem;
+  margin: 0;
+}
+.info-box ul {
+  list-style: none;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+.info-box ul li {
+  display: flex;
+  justify-content: space-between;
+}
+.info-box ul li strong {
+  color: #555;
+  margin-right: 8px;
+}
+.info-box p {
+  padding: 16px;
+  font-size: 0.9rem;
+  color: #333;
+  margin: 0;
+}
+
+/* ================== 5. Responsive (สำหรับมือถือ) ================== */
+@media (max-width: 800px) {
+  body, html {
+    overflow: auto; /* มือถือต้องเลื่อนได้ */
+  }
+  .product-viewer-layout {
+    grid-template-columns: 1fr; /* 1 คอลัมน์ */
+    grid-template-rows: auto auto 1fr; /* Header, Viewer, Sidebar */
+    grid-template-areas:
+      "header"
+      "viewer"
+      "sidebar";
+    height: auto; 
+    width: 100%;
+  }
+  .pv-viewer {
+    min-height: 400px; /* การันตีความสูง viewer */
+    padding: 10px;
+  }
+  .pv-sidebar {
+    height: auto; /* ความสูงตามเนื้อหา */
+    border-left: none;
+    border-top: 1px solid #e0e0e0;
+  }
+  .pv-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.light-ctrl {
+  position: absolute;
+  right: 14px;
+  top: 12px;
+  z-index: 6;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .85);
+  border: 1px solid var(--line);
+  backdrop-filter: saturate(160%) blur(6px);
+}
+
+.light-ctrl input[type="range"] {
+  width: 220px;
+  height: 8px;
+  accent-color: var(--brand);
+}
