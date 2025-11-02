@@ -1,0 +1,336 @@
+:root {
+  --bg: #FAFAFC;
+  --card: #fff;
+  --ink: #1b1b1f;
+  --muted: #6c6f76;
+  --brand: #ff6f59;
+  --chip: #f2f3f7;
+  --line: #ececf0;
+  --radius: 16px;
+  --shadow: 0 8px 28px rgba(0, 0, 0, .06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Thai", sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+.wrap {
+  width: min(1200px, 92vw);
+  margin-inline: auto;
+}
+
+/* Topbar */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar .wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: .3px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.search {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.search input {
+  width: min(52vw, 420px);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  outline: none;
+  background: #fff;
+}
+
+.search button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 8px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: var(--chip);
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: .95rem;
+}
+
+.chip.is-active {
+  background: #fff;
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.meta {
+  color: var(--muted);
+  font-size: .95rem;
+}
+
+/* Masonry */
+.masonry {
+  column-count: 1;
+  column-gap: 16px;
+}
+
+@media (min-width:700px) {
+  .masonry {
+    column-count: 2;
+  }
+}
+
+@media (min-width:1024px) {
+  .masonry {
+    column-count: 3;
+  }
+}
+
+.card {
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 4/3;
+  background: #eee;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.badge {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  background: rgba(0, 0, 0, .65);
+  color: #fff;
+  font-size: .8rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+/* === Hotspots on card (จุดคลิกบนรูปย่อ) === */
+.thumb .pin-mini {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: rgba(0, 0, 0, .72);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+  cursor: pointer;
+  display: block;
+}
+
+.thumb .pin-mini::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  transform: translate(-50%, -100%);
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: .8rem;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+
+.thumb .pin-mini:hover::after {
+  opacity: 1;
+}
+
+.card .body {
+  padding: 12px 14px 14px;
+}
+
+.card h3 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .95rem;
+}
+
+.card button {
+  margin-top: 10px;
+  width: 100%;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.card button:hover {
+  border-color: #ddd;
+}
+
+/* Lightbox */
+dialog#lightbox {
+  width: min(920px, 94vw);
+  border: none;
+  padding: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .35);
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, .5);
+}
+
+.lb-close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 2;
+  border: none;
+  background: rgba(0, 0, 0, .65);
+  color: #fff;
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+
+.lb-stage {
+  position: relative;
+}
+
+.lb-stage img {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 70vh;
+  object-fit: cover;
+}
+
+.pins {
+  position: absolute;
+  inset: 0;
+}
+
+/* Hotspots (lightbox) */
+.pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: rgba(0, 0, 0, .65);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+  cursor: pointer;
+}
+
+.pin-card {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  min-width: 180px;
+  max-width: 240px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 10px 12px;
+  z-index: 5;
+}
+
+.pin-card h4 {
+  margin: 0 0 2px;
+  font-size: .95rem;
+}
+
+.pin-card .price {
+  color: var(--brand);
+  font-weight: 700;
+}
+
+.pin-card a {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ink);
+  background: #fff;
+}
+
+.pin-card a:hover {
+  border-color: #ddd;
+}
+
+.footer {
+  color: var(--muted);
+  padding: 24px 0 40px;
+  text-align: center;
+}

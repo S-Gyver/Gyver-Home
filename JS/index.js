@@ -72,7 +72,7 @@ function createRandomCards(productPool, containerId, count) {
     const card = document.createElement('a');
     card.className = 'product-card';
     // ไปหน้า Product พร้อมพารามิเตอร์ id สินค้า
-    card.href = `Product.html?id=${product.id}`;
+    card.href = `product.html?id=${product.id}`;
 
     const imageUrl = (product.images && product.images.length > 0)
       ? product.images[0]

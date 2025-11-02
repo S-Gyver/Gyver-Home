@@ -1,0 +1,66 @@
+[
+  {
+    "id": "id-01",
+    "title": "ตู้ลิ้นชักขาว + มุมแขวนเสื้อ",
+    "cat": ["bedroom", "storage", "decor"],
+    "img": "https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1600&auto=format&fit=crop",
+    "alt": "มุมห้องนอนสีขาว มีตู้ลิ้นชักและราวแขวนเสื้อ",
+    "hotspots": [
+      { "x": 78, "y": 18, "label": "ไฟสปอต 3 หัว", "price": "990", "href": "product.html?id=S101" },
+      { "x": 60, "y": 55, "label": "ตะกร้าสาน", "price": "199", "href": "product.html?id=S245" },
+      { "x": 32, "y": 88, "label": "ปลอกหมอนลินิน", "price": "129", "href": "product.html?id=S332" }
+    ]
+  },
+  {
+    "id": "id-02",
+    "title": "โต๊ะทำงานลุคอบอุ่น",
+    "cat": ["workspace", "storage"],
+    "img": "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=1600&auto=format&fit=crop",
+    "alt": "โต๊ะทำงานไม้และเก้าอี้",
+    "hotspots": [
+      { "x": 66, "y": 72, "label": "เก้าอี้ทำงาน", "price": "1,590", "href": "product.html?id=S520" }
+    ]
+  },
+  {
+    "id": "id-03",
+    "title": "เตียงสองชั้นเด็ก",
+    "cat": ["kids", "bedroom"],
+    "img": "https://images.unsplash.com/photo-1616594039964-ae9021aafc3e?q=80&w=1600&auto=format&fit=crop",
+    "alt": "เตียงสองชั้นพร้อมผ้าห่มลายจุด"
+  },
+  {
+    "id": "id-04",
+    "title": "มุมแต่งหน้าแสงสวย",
+    "cat": ["vanity", "bedroom", "decor"],
+    "img": "https://images.unsplash.com/photo-1541976590-713941681591?q=80&w=1600&auto=format&fit=crop",
+    "alt": "โต๊ะเครื่องแป้งหน้าต่างบานใหญ่"
+  },
+  {
+    "id": "id-05",
+    "title": "ตู้โมดูลจัดเก็บ + บอร์ดเจาะ",
+    "cat": ["workspace", "storage", "decor"],
+    "img": "https://images.unsplash.com/photo-1598300184004-940fe072a1c7?q=80&w=1600&auto=format&fit=crop",
+    "alt": "ชั้นโมดูลสีขาวและ pegboard"
+  },
+  {
+    "id": "id-06",
+    "title": "ตู้เสื้อผ้าแบบเปิดโล่ง",
+    "cat": ["storage", "bedroom"],
+    "img": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1600&auto=format&fit=crop",
+    "alt": "ชั้นและกล่องจัดเก็บเสื้อผ้า"
+  },
+  {
+    "id": "id-07",
+    "title": "โต๊ะข้างเตียง + ไฟเส้น",
+    "cat": ["decor", "bedroom"],
+    "img": "https://images.unsplash.com/photo-1524758631624-971bdc0f1cf5?q=80&w=1600&auto=format&fit=crop",
+    "alt": "มุมหัวเตียงกับไฟประดับ"
+  },
+  {
+    "id": "id-08",
+    "title": "สตูดิโอทำงานขนาดเล็ก",
+    "cat": ["workspace", "decor"],
+    "img": "https://images.unsplash.com/photo-1542393545-10f5cde2c810?q=80&w=1600&auto=format&fit=crop",
+    "alt": "โต๊ะทำงานสองที่นั่งสีขาว"
+  }
+]

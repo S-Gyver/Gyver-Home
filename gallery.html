@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inspire Gallery</title>
+  <link rel="stylesheet" href="CSS/gallery.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="#">Inspire Gallery</a>
+
+      <form id="searchForm" class="search" autocomplete="off">
+        <input id="q" type="search" placeholder="ค้นหา: ห้องนอน, มุมทำงาน, ชั้นวาง…" />
+        <button type="submit" aria-label="ค้นหา">ค้นหา</button>
+      </form>
+    </div>
+  </header>
+
+  <section class="filters wrap">
+    <div id="chipGroup" class="chips" role="tablist" aria-label="หมวดหมู่">
+      <button class="chip is-active" data-cat="">ทั้งหมด</button>
+      <button class="chip" data-cat="bedroom">ห้องนอน</button>
+      <button class="chip" data-cat="workspace">มุมทำงาน</button>
+      <button class="chip" data-cat="kids">เด็ก</button>
+      <button class="chip" data-cat="storage">เก็บของ</button>
+      <button class="chip" data-cat="vanity">โต๊ะเครื่องแป้ง</button>
+      <button class="chip" data-cat="decor">ตกแต่ง</button>
+    </div>
+    <div class="meta">พบ <span id="count">0</span> ไอเดีย</div>
+  </section>
+
+  <main class="wrap">
+    <div id="grid" class="masonry" aria-live="polite"></div>
+  </main>
+
+  <!-- Lightbox -->
+  <dialog id="lightbox">
+    <button class="lb-close" aria-label="ปิด" id="lbClose">✕</button>
+    <div class="lb-stage">
+      <img id="lbImg" alt="" />
+      <div id="lbPins" class="pins" aria-label="จุดลิงก์บนรูป"></div>
+    </div>
+    <p id="lbCaption"></p>
+  </dialog>
+
+  <footer class="wrap footer">
+    <small>เดโมแกลเลอรีไอเดีย • ปรับรูปและลิงก์สินค้าให้เข้ากับร้านของเอยได้เลย</small>
+  </footer>
+
+  <script src="JS/gallery.js"></script>
+</body>
+</html>
