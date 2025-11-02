@@ -1,5 +1,5 @@
 // ----------------------- config / globals -----------------------
-const PRODUCTS_URL = "JSON/Outlet.json";   // ← ใช้ไฟล์เดียว
+const PRODUCTS_URL = "JSON/outlet.json";   // ← ใช้ไฟล์เดียว
 
 // ดึง pid จาก query string เช่น product.html?id=S012
 const PID = new URLSearchParams(location.search).get("id") || "";

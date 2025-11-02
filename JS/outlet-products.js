@@ -5,7 +5,7 @@
  * ============================================= */
 
 // ---------- state กลาง ----------
-let allProducts = [];   // สินค้า Outlet ทั้งหมด
+let allProducts = [];   // สินค้า outlet ทั้งหมด
 let filtered = [];  // สินค้าหลังกรอง
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -27,7 +27,7 @@ function getQueryParams() {
 
 async function loadCatalog() {
   try {
-    // (ถูกต้อง!) ดึง "Outlet.json"
+    // (ถูกต้อง!) ดึง "outlet.json"
     const response = await fetch('JSON/outlet.json');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -58,7 +58,7 @@ async function loadCatalog() {
       initFilters();
     }
   } catch (error) {
-    console.error('ไม่สามารถโหลดข้อมูล Outlet ได้:', error);
+    console.error('ไม่สามารถโหลดข้อมูล outlet ได้:', error);
   }
 }
 
@@ -83,7 +83,7 @@ function createProductCard(product) {
   card.className = 'product-card outlet-card'; // (เพิ่มคลาส "outlet-card")
 
   // (1. "ป้ายเกรด" - อ่าน "product.grade" (ตัวอักษร))
-  const outletGrade = product.grade || "สินค้า Outlet";
+  const outletGrade = product.grade || "สินค้า outlet";
   const gradeBadge = document.createElement('span');
   gradeBadge.className = 'outlet-grade-badge';
   gradeBadge.textContent = outletGrade;
@@ -111,7 +111,7 @@ function createProductCard(product) {
 
   // (1. สร้าง Link หุ้มรูป)
   const linkAnchor = document.createElement('a');
-  linkAnchor.href = `Outlet-product.html?id=${product.id}`; // (ชี้ไปหน้า 2D)
+  linkAnchor.href = `outlet-product.html?id=${product.id}`; // (ชี้ไปหน้า 2D)
 
   // (2. สร้าง รูป)
   const img = document.createElement('img');
@@ -131,7 +131,7 @@ function createProductCard(product) {
     : "";
 
   contentDiv.innerHTML = `
-        <a href="Outlet-product.html?id=${product.id}" class="card-title">
+        <a href="outlet-product.html?id=${product.id}" class="card-title">
           ${product.name || 'ไม่มีชื่อสินค้า'}
         </a>
         
