@@ -1,317 +1,369 @@
 /* =============================================
- * JS/3d-measure.js
- * (ฉบับ "v7 - แก้บั๊ก \r\n" (Newline))
+ * JS/3d-measure.js  (สลับโมเดลตามรูปเล็ก 1–5)
+ * - โหลด 01.glb..05.glb จากโฟลเดอร์ 3D/<productId>/
+ * - วัดระยะ/ล้างค่า/รีเซ็ตกล้อง เหมือนเดิม
  * ============================================= */
 
-// 1. "นำเข้า" เครื่องมือ
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-// --- (ตัวแปรหลัก - เหมือนเดิม) ---
 let scene, camera, renderer, controls, loader;
 let ambientLight, directionalLight1, directionalLight2, directionalLight3;
 const baseIntensity = { amb: 0.5, dir1: 1.5, dir2: 0.8, dir3: 0.6 };
+
 let model;
+let currentProductId = null;
+let currentModelIndex = 1;   // 1..5
 
-// [ตลับเมตร - เหมือนเดิม]
+// ตลับเมตร
 let raycaster, mouse;
-let measurementPoints = [], measurementLines = [], measurementLabels = [];
-let isMeasureModeActive = false, measureBtn, clearBtn, resetCameraBtn;
+let measurementPoints = [];
+let measurementLines = [];
+let measurementLabels = [];
+let measurementMarkers = [];
+let isMeasureModeActive = false;
 
-// --- (ที่ที่เราจะวาด - เหมือนเดิม) ---
+// UI
+let measureBtn, clearBtn, resetCameraBtn;
 const container = document.getElementById('canvas-container');
 
-// --- "สตาร์ทเครื่องยนต์" ---
 init();
 animate();
 
-// ---------------------------------------------
-// ด้านล่างนี้คือฟังก์ชันทั้งหมด
-// ---------------------------------------------
-
-/**
- * 1. ฟังก์ชัน "เริ่มต้น" (Init)
- */
+/* ---------- Init ---------- */
 function init() {
-  // (1.1 - 1.6: สร้าง Scene, Camera, Renderer, Lights, Controls, Loader)
-  // (โค้ดส่วนนี้ "เหมือนเดิม" ทั้งหมด...)
-  // ...
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xffffff);
-  camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
+
   renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setSize(w, h);
   renderer.setPixelRatio(window.devicePixelRatio);
   container.appendChild(renderer.domElement);
+
   ambientLight = new THREE.AmbientLight(0xffffff, baseIntensity.amb);
   scene.add(ambientLight);
+
   directionalLight1 = new THREE.DirectionalLight(0xffffff, baseIntensity.dir1);
   directionalLight1.position.set(2, 3, 2);
   scene.add(directionalLight1);
+
   directionalLight2 = new THREE.DirectionalLight(0xffffff, baseIntensity.dir2);
   directionalLight2.position.set(-2, 1, -5);
   scene.add(directionalLight2);
+
   directionalLight3 = new THREE.DirectionalLight(0xffffff, baseIntensity.dir3);
   directionalLight3.position.set(-2, -2, 2);
   scene.add(directionalLight3);
+
   controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = false;
+  controls.enableDamping = true;
+  controls.dampingFactor = 1;
+
   loader = new GLTFLoader();
-  // ... (จบส่วนย่อ)
 
-  // 1.7 "ค้นหา & โหลดข้อมูล" (จาก URL)
   const lightSlider = document.getElementById('light-slider');
-  loadProductDetails(lightSlider);
+  measureBtn = document.getElementById('measure-toggle-btn');
+  clearBtn   = document.getElementById('measure-clear-btn');
+  resetCameraBtn = document.getElementById('reset-camera-btn');
 
-  // [ตลับเมตร - เหมือนเดิม]
   raycaster = new THREE.Raycaster();
   mouse = new THREE.Vector2();
   renderer.domElement.addEventListener('pointerdown', onPointerDown);
-  measureBtn = document.getElementById('measure-toggle-btn');
+
   if (measureBtn) measureBtn.addEventListener('click', toggleMeasureMode);
-  clearBtn = document.getElementById('measure-clear-btn');
   if (clearBtn) clearBtn.addEventListener('click', clearMeasurements);
-  resetCameraBtn = document.getElementById('reset-camera-btn');
   if (resetCameraBtn) resetCameraBtn.addEventListener('click', resetCamera);
 
-  // 1.8 (สำคัญ) ทำให้จอปรับขนาดตามหน้าต่าง
   window.addEventListener('resize', onWindowResize, false);
+
+  loadProductDetails(lightSlider);
 }
 
+/* ---------- Helpers ---------- */
+function frameToObject(obj){
+  const box = new THREE.Box3().setFromObject(obj);
+  const size = new THREE.Vector3(); box.getSize(size);
+  const center = new THREE.Vector3(); box.getCenter(center);
 
-/**
- * ฟังก์ชัน: อ่าน URL, โหลด JSON, อัปเดต UI, และโหลดโมเดล
- * ( ⭐️ "อัปเกรด" ส่วน "รายละเอียด" (Description) ครับ ⭐️ )
- */
+  controls.target.copy(center);
+
+  const maxDim = Math.max(size.x, size.y, size.z);
+  const fov = camera.fov * (Math.PI / 180);
+  let dist = maxDim / (2 * Math.tan(fov / 2));
+  dist *= 1.5;
+
+  camera.position.copy(center);
+  camera.position.z += dist;
+  camera.updateProjectionMatrix();
+  controls.update();
+  controls.saveState();
+}
+
+function disposeObject3D(obj){
+  obj.traverse(o=>{
+    if (o.geometry) o.geometry.dispose();
+    if (o.material){
+      if (Array.isArray(o.material)) o.material.forEach(m=>m.dispose?.());
+      else o.material.dispose?.();
+    }
+  });
+}
+
+function loadModelByIndex(idx){
+  // ล้างโมเดลเก่า
+  if (model){
+    scene.remove(model);
+    disposeObject3D(model);
+    model = null;
+  }
+
+  const baseDir = `3D/${currentProductId}/`;
+  const glb = `${String(idx).padStart(2,'0')}.glb`;
+
+  loader.load(
+    baseDir + glb,
+    (gltf)=>{
+      model = gltf.scene;
+      scene.add(model);
+      frameToObject(model);
+    },
+    undefined,
+    (err)=> console.error('โหลดโมเดลไม่ผ่าน:', err)
+  );
+
+  // ไฮไลต์รูปเล็ก
+  const thumbs = document.querySelectorAll('#thumb-strip img.thumb');
+  thumbs.forEach((im,i)=> im.classList.toggle('active', i === (idx-1)));
+  currentModelIndex = idx;
+}
+
+/* ---------- Load details & thumbnails ---------- */
 async function loadProductDetails(lightSliderElement) {
-  // (ค้นหา Elements ใน UI...)
-  const productNameEl = document.querySelector('.product-name');
-  const productIdEl = document.querySelector('.product-id');
-  const infoCategoryEl = document.querySelector('#info-category');
-  const infoMaterialEl = document.querySelector('#info-material');
+  const productNameEl   = document.querySelector('.product-name');
+  const productIdEl     = document.querySelector('.product-id');
+  const infoCategoryEl  = document.querySelector('#info-category');
+  const infoMaterialEl  = document.querySelector('#info-material');
   const infoDescriptionEl = document.querySelector('#info-description');
-  const priceRegularEl = document.querySelector('#price-regular');
-  const priceSpecialEl = document.querySelector('#price-special');
+  const priceRegularEl  = document.querySelector('#price-regular');
+  const priceSpecialEl  = document.querySelector('#price-special');
 
   try {
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
-    if (!productId) { /* ... (จัดการ Error) ... */ return; }
-    const response = await fetch('JSON/3d-products.json');
-    if (!response.ok) throw new Error('ไม่สามารถโหลด 3d-products.json');
-    const allProducts = await response.json();
-    const product = allProducts.find(p => p.id === productId);
+    if (!productId) return;
 
-    if (product) {
-      // 4. "อัปเดต UI" (Header & Sidebar)
-      if (productIdEl) productIdEl.textContent = product.id;
-      if (productNameEl) productNameEl.textContent = product.name;
-      if (infoCategoryEl) infoCategoryEl.textContent = product.category || '-';
-      if (infoMaterialEl) infoMaterialEl.textContent = product.material || '-';
+    const res = await fetch('JSON/3d-products.json');
+    if (!res.ok) throw new Error('ไม่สามารถโหลด 3d-products.json');
+    const all = await res.json();
+    const product = all.find(p => p.id === productId);
+    if (!product) return;
 
-      // ⭐️ 5. (ใหม่!) "อัปเกรด UI รายละเอียด" (Description) ⭐️
-      if (infoDescriptionEl) {
-        const desc = product.desc || 'ไม่มีรายละเอียด';
+    // อัปเดต UI
+    if (productIdEl) productIdEl.textContent = product.id || '';
+    if (productNameEl) productNameEl.textContent = product.name || '';
 
-        // ( "แปลง" \r\n (ใน JSON) ➔ <br> (ใน HTML) )
-        // ( /g = "ทั้งหมด" (Global))
-        const formattedDesc = desc.replace(/\r\n/g, '<br>');
-
-        // ( "เปลี่ยน" จาก .textContent ➔ .innerHTML )
-        infoDescriptionEl.innerHTML = formattedDesc;
-      }
-
-      // 6. "อัปเดต UI ราคา" (เหมือน v6)
-      if (priceRegularEl && priceSpecialEl) {
-        const regularPrice = product.price || 0;
-        const specialPrice = product.salePrice || 0;
-        const formattedRegular = regularPrice.toLocaleString('th-TH');
-        const formattedSpecial = specialPrice.toLocaleString('th-TH');
-        if (specialPrice > 0 && specialPrice < regularPrice) {
-          priceRegularEl.innerHTML = `ราคา: <del>${formattedRegular}</del> บาท`;
-          priceSpecialEl.innerHTML = `ราคาพิเศษ: <strong>${formattedSpecial}</strong> บาท`;
-        } else {
-          priceRegularEl.innerHTML = `ราคา: <strong>${formattedRegular}</strong> บาท`;
-          priceSpecialEl.innerHTML = ""; // (ซ่อน)
-        }
-      }
-
-      // 7. "โหลดโมเดล" (เหมือนเดิม)
-      const modelPath = `3D/${product.id}/01.glb`;
-      loader.load(
-        modelPath,
-        (gltf) => {
-          // (โค้ด Auto-Framing + เชื่อม Slider ... "เหมือนเดิม")
-          // ...
-          model = gltf.scene;
-          scene.add(model);
-          const box = new THREE.Box3().setFromObject(model);
-          const size = new THREE.Vector3();
-          box.getSize(size);
-          const center = new THREE.Vector3();
-          box.getCenter(center);
-          controls.target.copy(center);
-          const maxDim = Math.max(size.x, size.y, size.z);
-          const fov = camera.fov * (Math.PI / 180);
-          let cameraDistance = maxDim / (2 * Math.tan(fov / 2));
-          cameraDistance *= 1.5;
-          camera.position.copy(center);
-          camera.position.z += cameraDistance;
-          camera.updateProjectionMatrix();
-          controls.update();
-          controls.saveState(); // (บันทึก State ไว้ให้ "รีเซ็ตกล้อง")
-          const updateAllLights = (multiplierString) => {
-            const m = parseFloat(multiplierString);
-            ambientLight.intensity = baseIntensity.amb * m;
-            directionalLight1.intensity = baseIntensity.dir1 * m;
-            directionalLight2.intensity = baseIntensity.dir2 * m;
-            directionalLight3.intensity = baseIntensity.dir3 * m;
-          };
-          lightSliderElement.addEventListener('input', (event) => {
-            updateAllLights(event.target.value);
-          });
-          updateAllLights(lightSliderElement.value);
-          // ... (จบโค้ดเดิม)
-        },
-        null,
-        (error) => { console.error('โหลดโมเดลไม่ผ่าน:', error); }
-      );
+    if (infoCategoryEl) {
+      const cat = Array.isArray(product.category)
+        ? product.category.join(' / ')
+        : (product.category || '-');
+      infoCategoryEl.textContent = cat;
     }
-  } catch (error) {
-    console.error('เกิดข้อผิดพลาดใน loadProductDetails:', error);
+    if (infoMaterialEl) infoMaterialEl.textContent = product.material || '-';
+
+    if (infoDescriptionEl) {
+      const desc = product.desc || 'ไม่มีรายละเอียด';
+      infoDescriptionEl.innerHTML = desc.replace(/\r?\n/g, '<br>');
+    }
+
+    if (priceRegularEl && priceSpecialEl) {
+      const regularPrice = Number(product.price || 0);
+      const specialPrice = Number(product.salePrice || 0);
+      const fr = regularPrice.toLocaleString('th-TH');
+      const fs = specialPrice.toLocaleString('th-TH');
+      if (specialPrice > 0 && specialPrice < regularPrice) {
+        priceRegularEl.innerHTML = `ราคา: <del>${fr}</del> บาท`;
+        priceSpecialEl.innerHTML = `ราคาพิเศษ: <strong>${fs}</strong> บาท`;
+      } else {
+        priceRegularEl.innerHTML = `ราคา: <strong>${fr}</strong> บาท`;
+        priceSpecialEl.innerHTML = '';
+      }
+    }
+
+    // เก็บ productId ปัจจุบัน
+    currentProductId = product.id;
+
+    // สร้างรูปเล็ก 001..005
+    const thumbsHost = document.getElementById('thumb-strip');
+    if (thumbsHost){
+      thumbsHost.innerHTML = '';
+      const baseDir = `3D/${currentProductId}/`;
+      for (let i=1;i<=5;i++){
+        const n = String(i).padStart(3,'0');
+        const img = new Image();
+        img.src = `${baseDir}${n}.png`;
+        img.alt = `${product.name} — รูปที่ ${i}`;
+        img.loading = 'lazy';
+        img.className = 'thumb';
+        img.addEventListener('click', ()=> loadModelByIndex(i));
+        thumbsHost.appendChild(img);
+      }
+    }
+
+    // สไลเดอร์ไฟ (bind ครั้งเดียว)
+    const updateAllLights = (val)=>{
+      const m = Math.max(0, Math.min(14, parseFloat(val || 1)));
+      ambientLight.intensity      = baseIntensity.amb  * m;
+      directionalLight1.intensity = baseIntensity.dir1 * m;
+      directionalLight2.intensity = baseIntensity.dir2 * m;
+      directionalLight3.intensity = baseIntensity.dir3 * m;
+    };
+    if (lightSliderElement){
+      lightSliderElement.addEventListener('input', e=> updateAllLights(e.target.value));
+      updateAllLights(lightSliderElement.value);
+    } else {
+      updateAllLights(1);
+    }
+
+    // โหลดโมเดลเริ่มต้น 01.glb
+    loadModelByIndex(1);
+
+  } catch (err) {
+    console.error('เกิดข้อผิดพลาดใน loadProductDetails:', err);
   }
 }
 
-// [ฟังก์ชัน "สวิตช์" (เหมือนเดิม)]
+/* ---------- Measure mode ---------- */
 function toggleMeasureMode() {
-  // ... (โค้ด toggleMeasureMode เดิม)
   isMeasureModeActive = !isMeasureModeActive;
+  const canvasEl = renderer && renderer.domElement;
   if (isMeasureModeActive) {
     controls.enabled = false;
-    measureBtn.textContent = 'ปิดตลับเมตร';
-    measureBtn.classList.add('active');
-    container.style.cursor = 'crosshair';
+    if (measureBtn){ measureBtn.textContent = 'ปิดตลับเมตร'; measureBtn.classList.add('active'); }
+    if (canvasEl) canvasEl.style.cursor = 'crosshair';
   } else {
     controls.enabled = true;
-    measureBtn.textContent = 'เปิดตลับเมตร';
-    measureBtn.classList.remove('active');
-    container.style.cursor = 'grab';
+    if (measureBtn){ measureBtn.textContent = 'เปิดตลับเมตร'; measureBtn.classList.remove('active'); }
+    if (canvasEl) canvasEl.style.cursor = 'grab';
   }
 }
 
-// [ตลับเมตร (เหมือนเดิม)]
+/* ---------- Pointer & placing ---------- */
 function onPointerDown(event) {
-  // ... (โค้ด onPointerDown เดิม)
-  if (!isMeasureModeActive) { return; }
+  if (!isMeasureModeActive || !model) return;
   event.preventDefault();
-  if (!model) { return; }
+
   const rect = renderer.domElement.getBoundingClientRect();
   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObject(model, true);
-  if (intersects.length > 0) {
-    placeMarker(intersects[0].point);
-  }
+  if (intersects.length > 0) placeMarker(intersects[0].point);
 }
+
 function placeMarker(point) {
-  // ... (โค้ด placeMarker เดิม)
   const markerSize = 0.01;
   const sphereGeometry = new THREE.SphereGeometry(markerSize, 16, 16);
   const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, depthTest: false });
   const marker = new THREE.Mesh(sphereGeometry, sphereMaterial);
   marker.position.copy(point);
   scene.add(marker);
+  measurementMarkers.push(marker);
+
   measurementPoints.push(point);
+
   if (measurementPoints.length % 2 === 0) {
-    const point2 = measurementPoints[measurementPoints.length - 1];
-    const point1 = measurementPoints[measurementPoints.length - 2];
-    const distance = point1.distanceTo(point2);
+    const p2 = measurementPoints[measurementPoints.length - 1];
+    const p1 = measurementPoints[measurementPoints.length - 2];
+
+    const distance = p1.distanceTo(p2);
     const distanceCm = distance * 100;
-    const lineGeometry = new THREE.BufferGeometry().setFromPoints([point1, point2]);
+
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints([p1, p2]);
     const lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000, depthTest: false });
     const line = new THREE.Line(lineGeometry, lineMaterial);
     scene.add(line);
     measurementLines.push(line);
+
     const label = document.createElement('div');
     label.className = 'measurement-label';
     label.textContent = `${distanceCm.toFixed(1)} cm`;
-    const midPoint = new THREE.Vector3().addVectors(point1, point2).multiplyScalar(0.5);
-    label.userData = {};
-    label.userData.point3D = midPoint;
+
+    const midPoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+    label.userData = { point3D: midPoint };
     container.appendChild(label);
     measurementLabels.push(label);
   }
 }
 
-// [ฟังก์ชัน "ล้างค่า" (เหมือนเดิม)]
+/* ---------- Clear & Reset ---------- */
 function clearMeasurements() {
-  // ... (โค้ด clearMeasurements เดิม)
-  console.log('กำลังล้างการวัดทั้งหมด...');
+  // lines
   for (const line of measurementLines) {
+    scene.remove(line);
     line.geometry.dispose();
     line.material.dispose();
-    scene.remove(line);
   }
-  for (const label of measurementLabels) {
-    container.removeChild(label);
-  }
-  const objectsToKeep = [];
-  scene.children.forEach((obj) => {
-    if (obj.isMesh && obj.material.isMeshBasicMaterial && obj.material.color.getHex() === 0xff0000) {
-      obj.geometry.dispose();
-      obj.material.dispose();
-    } else {
-      objectsToKeep.push(obj);
-    }
-  });
-  scene.children = objectsToKeep;
-  measurementPoints = [];
   measurementLines = [];
+
+  // markers
+  for (const m of measurementMarkers) {
+    scene.remove(m);
+    m.geometry.dispose();
+    m.material.dispose();
+  }
+  measurementMarkers = [];
+
+  // labels
+  for (const label of measurementLabels) {
+    if (label.parentNode) label.parentNode.removeChild(label);
+  }
   measurementLabels = [];
+
+  measurementPoints = [];
 }
 
-// [ฟังก์ชัน "รีเซ็ตกล้อง" (เหมือนเดิม)]
 function resetCamera() {
-  // ... (โค้ด resetCamera เดิม)
-  console.log('กำลังรีเซ็ตกล้อง...');
   controls.reset();
+  camera.updateProjectionMatrix();
 }
 
-
-// [ฟังก์ชัน "วนลูป" (เหมือนเดิม)]
+/* ---------- Render loop ---------- */
 function animate() {
-  // ... (โค้ด animate เดิม)
   requestAnimationFrame(animate);
   updateLabels();
+  controls.update();
   renderer.render(scene, camera);
 }
 
-// [ฟังก์ชัน "ย้ายป้าย" (เหมือนเดิม)]
+/* ---------- Labels follow 3D ---------- */
 function updateLabels() {
-  // ... (โค้ด updateLabels เดิม)
   for (const label of measurementLabels) {
-    const point3D = label.userData.point3D;
-    const screenPosition = point3D.clone().project(camera);
-    if (screenPosition.z > 1) {
-      label.style.display = 'none';
-    } else {
-      label.style.display = 'block';
-      const x = (screenPosition.x * 0.5 + 0.5) * container.clientWidth;
-      const y = (screenPosition.y * -0.5 + 0.5) * container.clientHeight;
-      label.style.left = `${x}px`;
-      label.style.top = `${y}px`;
-    }
+    const p3 = label.userData.point3D;
+    if (!p3) continue;
+
+    const s = p3.clone().project(camera);
+    if (s.z > 1) { label.style.display = 'none'; continue; }
+    label.style.display = 'block';
+
+    const x = (s.x * 0.5 + 0.5) * container.clientWidth;
+    const y = (s.y * -0.5 + 0.5) * container.clientHeight;
+    label.style.left = `${x}px`;
+    label.style.top  = `${y}px`;
   }
 }
 
-// [ฟังก์ชัน "ปรับขนาดจอ" (เหมือนเดิม)]
+/* ---------- Resize ---------- */
 function onWindowResize() {
-  // ... (โค้ด onWindowResize เดิม)
-  if (container) {
-    camera.aspect = container.clientWidth / container.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(container.clientWidth, container.clientHeight);
-  }
+  if (!container) return;
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
 }
