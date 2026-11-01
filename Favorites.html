@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>รายการโปรดของฉัน — Gyver Home</title>
+  <link rel="stylesheet" href="CSS/app-theme.css">
+  <style>
+    .page-hero {
+      padding: 48px 0 24px;
+      text-align: center;
+    }
+    .page-hero h1 {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+    .page-hero p {
+      color: var(--ink-muted);
+    }
+    .fav-empty {
+      text-align: center;
+      padding: 80px 20px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .fav-empty svg {
+      width: 72px;
+      height: 72px;
+      color: var(--ink-light);
+      margin-bottom: 16px;
+    }
+    .btn-shop-now {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 28px;
+      background: var(--wood-dark);
+      color: #fff;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      transition: all var(--transition-fast);
+    }
+    .btn-shop-now:hover {
+      background: var(--wood-primary);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <span class="pill">CRAFTED WOOD</span>
+    <span>งานไม้แฮนด์เมดผลิตชิ้นต่อชิ้น โทนอบอุ่น เข้ากับทุกมุมห้อง</span>
+    <span class="pill">จัดส่งฟรี 990.- ขึ้นไป</span>
+  </div>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container-custom header-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">G</div>
+        <span>S GYVER</span>
+        <span class="tag">HOME</span>
+      </a>
+
+      <div class="header-search">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="search" placeholder="ค้นหาของแต่งบ้าน เช่น หิ้งพระ, ชั้นวาง...">
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <a href="Favorites.html" class="action-btn" aria-label="รายการโปรด" style="color:var(--brand-accent);">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <span class="badge-count fav-badge-count">0</span>
+        </a>
+
+        <button class="action-btn" data-open-cart aria-label="ตะกร้าสินค้า">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="badge-count cart-badge-count">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Navigation -->
+    <nav class="sub-nav">
+      <div class="container-custom sub-nav-inner">
+        <a href="index.html" class="nav-chip">🏠 หน้าแรก</a>
+        <a href="catalog.html" class="nav-chip">📦 สินค้าทั้งหมด</a>
+        <a href="catalog-3d.html" class="nav-chip">🧊 3D Showroom</a>
+        <a href="outlet.html" class="nav-chip">🏷️ สินค้า Outlet <span class="chip-badge">SALE</span></a>
+        <a href="gallery.html" class="nav-chip">🖼️ แกลลอรี่ไอเดีย</a>
+        <a href="Favorites.html" class="nav-chip active">❤️ รายการโปรด</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container-custom" style="padding-bottom: 60px;">
+    <section class="page-hero">
+      <h1>รายการโปรดของคุณ (Wishlist)</h1>
+      <p>สินค้างานไม้ที่คุณบันทึกไว้ สามารถสั่งซื้อหรือตรวจเช็คสต็อกได้ทันที</p>
+    </section>
+
+    <div id="favorites-container" class="product-grid">
+      <!-- Items dynamically populated -->
+    </div>
+
+    <div id="favorites-empty" class="fav-empty" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+      <h3>ยังไม่มีรายการที่บันทึกไว้</h3>
+      <p>คลิกที่ไอคอนรูปหัวใจ ❤️ ที่การ์ดสินค้า เพื่อบันทึกสินค้าที่คุณชอบไว้ที่นี่</p>
+      <a href="catalog.html" class="btn-shop-now">ไปเลือกชมสินค้า</a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container-custom">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="brand-logo" style="color: #fff; margin-bottom: 16px;">
+            <div class="logo-icon">G</div>
+            <span>S GYVER</span>
+            <span class="tag">HOME</span>
+          </div>
+          <p style="line-height: 1.7; max-width: 340px;">
+            เฟอร์นิเจอร์และของตกแต่งบ้านงานไม้แฮนด์เมด ออกแบบด้วยความประณีต ผสมผสานเสน่ห์ความอบอุ่นแบบธรรมชาติเข้ากับการอยู่อาศัยยุคใหม่
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>หมวดหมู่สินค้า</h4>
+          <ul>
+            <li><a href="catalog.html?cat=ชั้นวาง">ชั้นวางของ</a></li>
+            <li><a href="catalog.html?cat=หิ้งพระ">หิ้งพระมินิมอล</a></li>
+            <li><a href="catalog.html?cat=ชั้นแขวน">ชั้นแขวนผนัง</a></li>
+            <li><a href="catalog-3d.html">โมเดล 3D เสมือนจริง</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>บริการ & ช่วยเหลือ</h4>
+          <ul>
+            <li><a href="index.html#mto">สั่งผลิตตามขนาด (Made to Order)</a></li>
+            <li><a href="gallery.html">ไอเดียการจัดห้อง</a></li>
+            <li><a href="outlet.html">สินค้า Outlet ราคาพิเศษ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>ติดต่อร้านค้า</h4>
+          <p style="margin-bottom: 8px;">อีเมล: Sgyver36@gmail.com</p>
+          <p style="margin-bottom: 8px;">LINE ID: @sgyver</p>
+          <p>เวลาทำการ: ทุกวัน 09:00 - 18:00 น.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 S GYVER Home. All rights reserved. Handcrafted with care.</div>
+        <div>Minimalist & Warm Living Solutions</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="JS/store.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const container = document.getElementById('favorites-container');
+      const emptyEl = document.getElementById('favorites-empty');
+
+      async function renderFavorites() {
+        const favs = GyverStore.getFavorites();
+        if (favs.length === 0) {
+          container.style.display = 'none';
+          emptyEl.style.display = 'block';
+          return;
+        }
+
+        container.style.display = 'grid';
+        emptyEl.style.display = 'none';
+
+        // Load all products to get fresh info
+        const all = GyverStore.getAllProducts();
+        let products = all;
+        if (products.length === 0) {
+          try {
+            const res = await fetch('JSON/products.json');
+            products = await res.json();
+          } catch(e) {}
+        }
+
+        container.innerHTML = '';
+
+        favs.forEach(favItem => {
+          const id = typeof favItem === 'string' ? favItem : favItem.id;
+          const product = products.find(p => p.id === id) || (typeof favItem === 'object' ? favItem : null);
+
+          if (!product) return;
+
+          const finalPrice = product.salePrice || product.price;
+          const hasDiscount = product.salePrice && product.salePrice < product.price;
+          const imgUrl = product.images?.[0] || product.image || 'image/placeholder.jpg';
+
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          card.innerHTML = `
+            <div class="card-media-wrap">
+              <img src="${imgUrl}" alt="${product.name}" onerror="this.src='image/placeholder.jpg'">
+              <button class="btn-wishlist active" data-fav-id="${product.id}" title="นำออกจากรายการโปรด">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="card-id-category">
+                <span>รหัส: ${product.id}</span>
+              </div>
+              <a href="product.html?id=${product.id}" class="card-title">${product.name}</a>
+              <div class="card-price-row">
+                <div class="card-prices">
+                  <span class="price-current">฿${Number(finalPrice).toLocaleString('th-TH')}</span>
+                  ${hasDiscount ? `<span class="price-original">฿${Number(product.price).toLocaleString('th-TH')}</span>` : ''}
+                </div>
+                <button class="card-quick-add" title="หยิบใส่ตะกร้า" onclick='GyverStore.addToCart({ id: "${product.id}", name: "${product.name}", price: ${finalPrice}, originalPrice: ${product.price}, image: "${imgUrl}" })'>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          `;
+
+          card.querySelector('.btn-wishlist').addEventListener('click', (e) => {
+            e.preventDefault();
+            GyverStore.toggleFavorite(product);
+            renderFavorites();
+          });
+
+          container.appendChild(card);
+        });
+      }
+
+      window.addEventListener('gyver:favorites-updated', renderFavorites);
+      setTimeout(renderFavorites, 200);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ติดต่อเรา & สตูดิโองานไม้ — Gyver Home</title>
+  <meta name="description" content="ติดต่อช่างไม้ Gyver Home ปรึกษางานสั่งทำพิเศษ (Made-to-Order) สอบถามขนาดและสต็อกสินค้า">
+
+  <link rel="stylesheet" href="CSS/app-theme.css">
+
+  <style>
+    .contact-hero {
+      padding: 48px 0 30px;
+      text-align: center;
+    }
+    .contact-hero h1 {
+      font-size: 2.4rem;
+      margin-bottom: 10px;
+    }
+    .contact-hero p {
+      color: var(--ink-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-grid-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 40px;
+      margin-bottom: 70px;
+      align-items: start;
+    }
+
+    .contact-info-card {
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 36px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .contact-channel-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .channel-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--wood-subtle);
+      color: var(--wood-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .channel-text h4 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .channel-text p {
+      color: var(--ink-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* Form Card */
+    .contact-form-card {
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 36px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink-primary);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      background: var(--bg-primary);
+      outline: none;
+      transition: border-color var(--transition-fast);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--wood-primary);
+      background: #fff;
+    }
+
+    .btn-send-message {
+      width: 100%;
+      padding: 15px;
+      background: var(--wood-dark);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      margin-top: 10px;
+    }
+
+    .btn-send-message:hover {
+      background: var(--wood-primary);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 800px) {
+      .contact-grid-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <span class="pill">CRAFT WORKSHOP</span>
+    <span>รับปรึกษางานสั่งทำพิเศษ (Made-to-Order) และงานติดตั้งของแต่งบ้าน</span>
+  </div>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container-custom header-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">G</div>
+        <span>S GYVER</span>
+        <span class="tag">HOME</span>
+      </a>
+
+      <div class="header-search">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="search" placeholder="ค้นหาของแต่งบ้าน เช่น หิ้งพระ, ชั้นวางไม้...">
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <a href="Favorites.html" class="action-btn" aria-label="รายการโปรด">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <span class="badge-count fav-badge-count">0</span>
+        </a>
+
+        <button class="action-btn" data-open-cart aria-label="ตะกร้าสินค้า">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="badge-count cart-badge-count">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Nav Chips -->
+    <nav class="sub-nav">
+      <div class="container-custom sub-nav-inner">
+        <a href="index.html" class="nav-chip">🏠 หน้าแรก</a>
+        <a href="catalog.html" class="nav-chip">📦 สินค้าทั้งหมด</a>
+        <a href="catalog-3d.html" class="nav-chip">🧊 3D Showroom</a>
+        <a href="outlet.html" class="nav-chip">🏷️ สินค้า Outlet <span class="chip-badge">SALE</span></a>
+        <a href="gallery.html" class="nav-chip">🖼️ แกลลอรี่ไอเดีย</a>
+        <a href="contact.html" class="nav-chip active">📬 ติดต่อเรา</a>
+        <a href="Favorites.html" class="nav-chip">❤️ รายการโปรด</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container-custom">
+    
+    <div class="contact-hero">
+      <h1>ติดต่อเรา & สตูดิโองานไม้ Gyver</h1>
+      <p>มีข้อสงสัยเกี่ยวกับสินค้า ขนาดพื้นที่ หรือต้องการปรึกษางานสั่งทำพิเศษ ติดต่อทีมงานและช่างไม้ของเราได้ตลอดเวลา</p>
+    </div>
+
+    <div class="contact-grid-wrap">
+      
+      <!-- Contact Channels Info -->
+      <div class="contact-info-card">
+        <h3 style="font-size:1.35rem; margin-bottom:24px;">ช่องทางการติดต่อ</h3>
+
+        <div class="contact-channel-item">
+          <div class="channel-icon">💬</div>
+          <div class="channel-text">
+            <h4>LINE Official Account</h4>
+            <p><strong>@sgyver</strong> (มี @ ด้านหน้า)<br>ตอบกลับเร็ว ให้คำปรึกษาและส่งแบบร่าง 3D</p>
+          </div>
+        </div>
+
+        <div class="contact-channel-item">
+          <div class="channel-icon">✉️</div>
+          <div class="channel-text">
+            <h4>อีเมลฝ่ายบริการลูกค้า</h4>
+            <p><strong>Sgyver36@gmail.com</strong><br>สำหรับติดต่อธุรกิจ ขอใบเสนอราคา หรือแจ้งปัญหา</p>
+          </div>
+        </div>
+
+        <div class="contact-channel-item">
+          <div class="channel-icon">🕒</div>
+          <div class="channel-text">
+            <h4>เวลาทำการสตูดิโอ</h4>
+            <p>เปิดให้บริการทุกวัน 09:00 – 18:00 น.<br>(จัดส่งสินค้าทุกวันจันทร์ - เสาร์)</p>
+          </div>
+        </div>
+
+        <div class="contact-channel-item">
+          <div class="channel-icon">🪵</div>
+          <div class="channel-text">
+            <h4>Workshop & หน้าร้าน</h4>
+            <p>Gyver Home Studio & Woodcraft<br>กรุงเทพมหานคร และปริมณฑล</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Message Form -->
+      <div class="contact-form-card">
+        <h3 style="font-size:1.35rem; margin-bottom:6px;">ส่งข้อความถึงเรา</h3>
+        <p style="color:var(--ink-muted); font-size:0.88rem; margin-bottom:20px;">กรอกแบบฟอร์มด้านล่าง เราจะติดต่อกลับภายใน 24 ชั่วโมง</p>
+
+        <form id="contact-form" onsubmit="event.preventDefault(); handleContactSubmit();">
+          <div class="form-group">
+            <label for="contact-name">ชื่อ - นามสกุล *</label>
+            <input type="text" id="contact-name" placeholder="เช่น คุณสมชาย มุ่งมั่น" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-tel">เบอร์โทรศัพท์ หรือ LINE ID *</label>
+            <input type="text" id="contact-tel" placeholder="เช่น 081-xxx-xxxx หรือ line_id" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-topic">เรื่องที่ต้องการติดต่อ</label>
+            <select id="contact-topic">
+              <option value="สั่งทำพิเศษ">สั่งผลิตตามขนาด (Made to Order)</option>
+              <option value="สอบถามสินค้า">สอบถามข้อมูลสินค้าและสต็อก</option>
+              <option value="ติดตามพัสดุ">ติดตามสถานะการจัดส่ง</option>
+              <option value="อื่นๆ">ข้อเสนอแนะหรือเรื่องอื่นๆ</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-msg">รายละเอียดข้อความ</label>
+            <textarea id="contact-msg" rows="4" placeholder="พิมพ์รายละเอียดที่ต้องการสอบถาม ขนาดพื้นที่ หรือสไตล์ที่ชอบ..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-send-message">ส่งข้อความถึงทีมงาน</button>
+        </form>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Mobile Bottom Bar -->
+  <div class="mobile-bottom-bar">
+    <a href="index.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+      <span>หน้าแรก</span>
+    </a>
+    <a href="catalog.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span>สินค้า</span>
+    </a>
+    <a href="catalog-3d.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+      <span>3D</span>
+    </a>
+    <a href="Favorites.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <span>โปรด</span>
+    </a>
+    <a href="#" class="mobile-nav-item" data-open-cart>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      <span>ตะกร้า</span>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container-custom">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="brand-logo" style="color: #fff; margin-bottom: 16px;">
+            <div class="logo-icon">G</div>
+            <span>S GYVER</span>
+            <span class="tag">HOME</span>
+          </div>
+          <p style="line-height: 1.7; max-width: 340px;">
+            เฟอร์นิเจอร์และของแต่งบ้านงานไม้แฮนด์เมด ออกแบบด้วยความประณีต ผสมผสานเสน่ห์ความอบอุ่นแบบธรรมชาติเข้ากับการอยู่อาศัยยุคใหม่
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>หมวดหมู่สินค้า</h4>
+          <ul>
+            <li><a href="catalog.html?cat=ชั้นวาง">ชั้นวางของ & ชั้นโชว์</a></li>
+            <li><a href="catalog.html?cat=หิ้งพระ">หิ้งพระมินิมอล</a></li>
+            <li><a href="catalog.html?cat=ชั้นแขวน">ชั้นแขวนผนัง</a></li>
+            <li><a href="catalog-3d.html">โมเดล 3D เสมือนจริง</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>บริการ & ช่วยเหลือ</h4>
+          <ul>
+            <li><a href="index.html#mto">สั่งผลิตตามขนาด (Made to Order)</a></li>
+            <li><a href="gallery.html">ไอเดียการจัดห้อง</a></li>
+            <li><a href="outlet.html">สินค้า Outlet ราคาพิเศษ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>ติดต่อร้านค้า</h4>
+          <p style="margin-bottom: 8px;">อีเมล: Sgyver36@gmail.com</p>
+          <p style="margin-bottom: 8px;">LINE ID: @sgyver</p>
+          <p>เวลาทำการ: ทุกวัน 09:00 - 18:00 น.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 S GYVER Home. All rights reserved. Handcrafted with care.</div>
+        <div>Minimalist & Warm Living Solutions</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="JS/store.js"></script>
+  <script>
+    function handleContactSubmit() {
+      const name = document.getElementById('contact-name').value;
+      GyverStore.showToast(`ขอบคุณครับคุณ ${name} เราได้รับข้อความแล้ว!`);
+      document.getElementById('contact-form').reset();
+    }
+  </script>
+</body>
+
+</html>

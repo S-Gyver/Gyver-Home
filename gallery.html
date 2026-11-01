@@ -1,54 +1,339 @@
 <!DOCTYPE html>
 <html lang="th">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Inspire Gallery</title>
-  <link rel="stylesheet" href="CSS/gallery.css" />
-</head>
-<body>
-  <header class="topbar">
-    <div class="wrap">
-      <a class="brand" href="#">Inspire Gallery</a>
 
-      <form id="searchForm" class="search" autocomplete="off">
-        <input id="q" type="search" placeholder="ค้นหา: ห้องนอน, มุมทำงาน, ชั้นวาง…" />
-        <button type="submit" aria-label="ค้นหา">ค้นหา</button>
-      </form>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inspire Gallery — ไอเดียแต่งบ้าน & จุดช้อปปิ้งสินค้า | Gyver Home</title>
+  <meta name="description" content="แรงบันดาลใจในการแต่งบ้าน จัดห้องนอน มุมทำงาน ด้วยเฟอร์นิเจอร์ไม้คราฟต์">
+
+  <link rel="stylesheet" href="CSS/app-theme.css">
+  <link rel="stylesheet" href="CSS/gallery.css">
+
+  <style>
+    /* Overlay adjustments for unified design */
+    .gallery-intro-bar {
+      padding: 36px 0 20px;
+    }
+    .gallery-intro-bar h1 {
+      font-size: 2.3rem;
+      margin-bottom: 8px;
+    }
+    .gallery-intro-bar p {
+      color: var(--ink-muted);
+    }
+
+    .chip-wrap-box {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .chip-btn {
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-medium);
+      background: #fff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .chip-btn:hover {
+      border-color: var(--wood-primary);
+      color: var(--wood-dark);
+    }
+
+    .chip-btn.is-active {
+      background: var(--wood-dark);
+      color: #fff;
+      border-color: var(--wood-dark);
+      box-shadow: 0 4px 12px rgba(110, 63, 25, 0.2);
+    }
+
+    /* Masonry grid improvements */
+    .masonry {
+      columns: 4 240px;
+      column-gap: 20px;
+      margin-bottom: 60px;
+    }
+
+    .card {
+      break-inside: avoid;
+      margin-bottom: 20px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-fast);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: pointer;
+    }
+
+    .card-caption {
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink-primary);
+    }
+
+    /* Lightbox styling */
+    dialog#lightbox {
+      border: none;
+      border-radius: var(--radius-lg);
+      padding: 0;
+      max-width: 900px;
+      width: 90vw;
+      background: #fff;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+      outline: none;
+    }
+
+    dialog#lightbox::backdrop {
+      background: rgba(28, 25, 23, 0.6);
+      backdrop-filter: blur(8px);
+    }
+
+    .lb-stage {
+      position: relative;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-height: 70vh;
+      overflow: hidden;
+    }
+
+    .lb-stage img {
+      max-height: 70vh;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .lb-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.8);
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lbCaption {
+      padding: 18px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ink-primary);
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <span class="pill">INSPIRATION</span>
+    <span>ไอเดียจัดมุมห้องด้วยงานไม้แฮนด์เมด • ช้อปสินค้าที่อยู่ในภาพได้ทันที</span>
+  </div>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container-custom header-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">G</div>
+        <span>S GYVER</span>
+        <span class="tag">HOME</span>
+      </a>
+
+      <div class="header-search">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="search" id="q-gallery" placeholder="ค้นหาไอเดีย เช่น ห้องนอน, มุมทำงาน...">
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <a href="Favorites.html" class="action-btn" aria-label="รายการโปรด">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <span class="badge-count fav-badge-count">0</span>
+        </a>
+
+        <button class="action-btn" data-open-cart aria-label="ตะกร้าสินค้า">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="badge-count cart-badge-count">0</span>
+        </button>
+      </div>
     </div>
+
+    <!-- Category Nav Chips -->
+    <nav class="sub-nav">
+      <div class="container-custom sub-nav-inner">
+        <a href="index.html" class="nav-chip">🏠 หน้าแรก</a>
+        <a href="catalog.html" class="nav-chip">📦 สินค้าทั้งหมด</a>
+        <a href="catalog-3d.html" class="nav-chip">🧊 3D Showroom</a>
+        <a href="outlet.html" class="nav-chip">🏷️ สินค้า Outlet <span class="chip-badge">SALE</span></a>
+        <a href="gallery.html" class="nav-chip active">🖼️ แกลลอรี่ไอเดีย</a>
+        <a href="Favorites.html" class="nav-chip">❤️ รายการโปรด</a>
+      </div>
+    </nav>
   </header>
 
-  <section class="filters wrap">
-    <div id="chipGroup" class="chips" role="tablist" aria-label="หมวดหมู่">
-      <button class="chip is-active" data-cat="">ทั้งหมด</button>
-      <button class="chip" data-cat="bedroom">ห้องนอน</button>
-      <button class="chip" data-cat="workspace">มุมทำงาน</button>
-      <button class="chip" data-cat="kids">เด็ก</button>
-      <button class="chip" data-cat="storage">เก็บของ</button>
-      <button class="chip" data-cat="vanity">โต๊ะเครื่องแป้ง</button>
-      <button class="chip" data-cat="decor">ตกแต่ง</button>
-    </div>
-    <div class="meta">พบ <span id="count">0</span> ไอเดีย</div>
-  </section>
+  <!-- Main Content -->
+  <main class="container-custom" style="padding-bottom: 70px;">
+    
+    <div class="gallery-intro-bar">
+      <h1>Inspire & Lookbook Gallery</h1>
+      <p>ไอเดียการจัดวางของแต่งบ้านสไตล์ Japandi คลิกที่รูปเพื่อดูจุดแท็กสินค้า (Shoppable Pins) และสั่งซื้อสินค้าในรูปได้ทันที</p>
+      
+      <!-- Filter Chips -->
+      <div class="chip-wrap-box" id="chipGroup">
+        <button class="chip chip-btn is-active" data-cat="">ทั้งหมด</button>
+        <button class="chip chip-btn" data-cat="bedroom">ห้องนอน</button>
+        <button class="chip chip-btn" data-cat="workspace">มุมทำงาน</button>
+        <button class="chip chip-btn" data-cat="kids">ห้องเด็ก</button>
+        <button class="chip chip-btn" data-cat="storage">เก็บของ & จัดระเบียบ</button>
+        <button class="chip chip-btn" data-cat="vanity">โต๊ะเครื่องแป้ง</button>
+        <button class="chip chip-btn" data-cat="decor">ตกแต่งผนัง</button>
+      </div>
 
-  <main class="wrap">
-    <div id="grid" class="masonry" aria-live="polite"></div>
+      <div style="font-size:0.9rem; color:var(--ink-muted); margin-bottom: 20px;">
+        พบ <strong id="count" style="color:var(--wood-dark);">0</strong> ไอเดียการจัดห้อง
+      </div>
+    </div>
+
+    <!-- Masonry Grid -->
+    <div id="grid" class="masonry">
+      <!-- Populated by gallery.js -->
+    </div>
+
   </main>
 
-  <!-- Lightbox -->
+  <!-- Shoppable Lightbox Dialog -->
   <dialog id="lightbox">
     <button class="lb-close" aria-label="ปิด" id="lbClose">✕</button>
     <div class="lb-stage">
-      <img id="lbImg" alt="" />
-      <div id="lbPins" class="pins" aria-label="จุดลิงก์บนรูป"></div>
+      <img id="lbImg" alt="ไอเดียการจัดห้อง" />
+      <div id="lbPins" class="pins" aria-label="จุดแท็กสินค้าบนรูป"></div>
     </div>
     <p id="lbCaption"></p>
   </dialog>
 
-  <footer class="wrap footer">
-    <small>เดโมแกลเลอรีไอเดีย • ปรับรูปและลิงก์สินค้าให้เข้ากับร้านของเอยได้เลย</small>
+  <!-- Mobile Bottom Bar -->
+  <div class="mobile-bottom-bar">
+    <a href="index.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+      <span>หน้าแรก</span>
+    </a>
+    <a href="catalog.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span>สินค้า</span>
+    </a>
+    <a href="catalog-3d.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+      <span>3D</span>
+    </a>
+    <a href="Favorites.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <span>โปรด</span>
+    </a>
+    <a href="#" class="mobile-nav-item" data-open-cart>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      <span>ตะกร้า</span>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container-custom">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="brand-logo" style="color: #fff; margin-bottom: 16px;">
+            <div class="logo-icon">G</div>
+            <span>S GYVER</span>
+            <span class="tag">HOME</span>
+          </div>
+          <p style="line-height: 1.7; max-width: 340px;">
+            เฟอร์นิเจอร์และของแต่งบ้านงานไม้แฮนด์เมด ออกแบบด้วยความประณีต ผสมผสานเสน่ห์ความอบอุ่นแบบธรรมชาติเข้ากับการอยู่อาศัยยุคใหม่
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>หมวดหมู่สินค้า</h4>
+          <ul>
+            <li><a href="catalog.html?cat=ชั้นวาง">ชั้นวางของ & ชั้นโชว์</a></li>
+            <li><a href="catalog.html?cat=หิ้งพระ">หิ้งพระมินิมอล</a></li>
+            <li><a href="catalog.html?cat=ชั้นแขวน">ชั้นแขวนผนัง</a></li>
+            <li><a href="catalog-3d.html">โมเดล 3D เสมือนจริง</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>บริการ & ช่วยเหลือ</h4>
+          <ul>
+            <li><a href="index.html#mto">สั่งผลิตตามขนาด (Made to Order)</a></li>
+            <li><a href="gallery.html">ไอเดียการจัดห้อง</a></li>
+            <li><a href="outlet.html">สินค้า Outlet ราคาพิเศษ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>ติดต่อร้านค้า</h4>
+          <p style="margin-bottom: 8px;">อีเมล: Sgyver36@gmail.com</p>
+          <p style="margin-bottom: 8px;">LINE ID: @sgyver</p>
+          <p>เวลาทำการ: ทุกวัน 09:00 - 18:00 น.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 S GYVER Home. All rights reserved. Handcrafted with care.</div>
+        <div>Minimalist & Warm Living Solutions</div>
+      </div>
+    </div>
   </footer>
 
+  <!-- Scripts -->
+  <script src="JS/store.js"></script>
   <script src="JS/gallery.js"></script>
+  <script>
+    // Hook custom gallery search input if present
+    const qGal = document.getElementById('q-gallery');
+    if (qGal) {
+      qGal.addEventListener('input', () => {
+        if (typeof state !== 'undefined') {
+          state.q = qGal.value;
+          applyFilters();
+        }
+      });
+    }
+  </script>
 </body>
+
 </html>

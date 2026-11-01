@@ -2,114 +2,243 @@
 <html lang="th">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Catalog — Gyver Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="CSS/Head.css">
-    <link rel="stylesheet" href="CSS/index.css">
-    <link rel="stylesheet" href="CSS/Filters.css">
-    <link rel="stylesheet" href="CSS/catalog.css">
-    <link rel="stylesheet" href="CSS/Outlet.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>สินค้า Outlet & Clearance — Gyver Home</title>
+  <meta name="description" content="สินค้าตัวโชว์ สินค้ามีตำหนิเล็กน้อย ใช้งานได้ 100% ในราคาสุดพิเศษ">
+
+  <link rel="stylesheet" href="CSS/app-theme.css">
+
+  <style>
+    .outlet-banner {
+      background: linear-gradient(135deg, #1E3A8A 0%, #1E293B 100%);
+      color: #fff;
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      margin-top: 30px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .outlet-banner h1 {
+      color: #fff;
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+
+    .outlet-banner p {
+      color: #93C5FD;
+      max-width: 550px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .disclaimer-card {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 30px;
+      font-size: 0.88rem;
+      color: #1E40AF;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .outlet-grade-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #2563EB;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      z-index: 2;
+    }
+
+    .outlet-reason {
+      font-size: 0.78rem;
+      color: #DC2626;
+      background: #FEE2E2;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin: 6px 0;
+      display: inline-block;
+    }
+  </style>
 </head>
 
 <body>
 
-    <header class="ca">
-        <div class="wrap header-in">
-            <a href="index.html" class="logo">S GYVER</a>
-
-            <!-- เมธอด: ฟอร์มค้นหา — onsubmit กันรีเฟรชหน้า (เดโม) ให้ JS ไปจัดการแทน -->
-            <form class="search" onsubmit="event.preventDefault();">
-                <input id="q" type="search" placeholder="เช่น หิ้งพระ" aria-label="ค้นหาสินค้า">
-                <button type="submit" aria-label="ปุ่มค้นหา">ค้นหา</button>
-            </form>
-
-            <!-- เมธอด: ลิงก์ลัดมุมขวา (บัญชี, รายการโปรด, ตะกร้า) -->
-            <nav class="quick" aria-label="เมนูลัด">
-                <a href="Log-in.html">เข้าสู่ระบบ</a>
-                <a href="Favorites.html">รายการโปรด</a>
-                <a href="Cart.html" class="cart" aria-live="polite">ตะกร้า (0)</a>
-            </nav>
-        </div>
-
-        <!-- เมธอด: เมนูหลักแบบชิป (จัดหมวดหมู่) -->
-        <div class="menu wrap" role="navigation" aria-label="เมนูหลัก">
-      <a href="index.html">ของแต่งบ้าน</a>
-      <a href="catalog.html">สินค้า</a>
-      <a href="catalog-3d.html">3D</a>
-      <a href="outlet.html">สินค้า Outlet</a>
-      <a href="gallery.html">แกลลอรี่</a>
-      <a href="contact.html">ติดต่อ</a>
-        </div>
-    </header>
-
-    <!-- แถบตัวกรอง -->
-    <div class="wrapFilters toolbar">
-        <div class="filters">
-            <div class="group">
-                <label for="sort">เรียงโดย</label>
-                <select id="sort">
-                    <option value="id-asc">ตามชื่อ</option>
-                    <option value="popular">ยอดนิยม</option>
-                    <option value="latest">ล่าสุด</option>
-                    <option value="bestseller">สินค้าขายดี</option>
-                    <option value="price-asc">ราคา: ต่ำ→สูง</option>
-                    <option value="price-desc">ราคา: สูง→ต่ำ</option>
-                </select>
-            </div>
-
-            <div class="group">
-                <label for="category">หมวด</label>
-                <select id="category">
-                    <option value="">ทั้งหมด</option>
-                    <option value="ชั้นวาง">ชั้นวาง</option>
-                    <option value="หิ้งพระ">หิ้งพระ</option>
-                    <option value="ชั้นแขวน">ชั้นแขวน</option>
-                    <option value="ของตกแต่ง">ของตกแต่ง</option>
-                </select>
-            </div>
-
-            <div class="group price">
-                <label>ราคา</label>
-                <input id="pmin" type="number" min="0" placeholder="ต่ำสุด">
-                <span>–</span>
-                <input id="pmax" type="number" min="0" placeholder="สูงสุด">
-                <button id="applyPrice" type="button">ตกลง</button>
-            </div>
-        </div>
-
-        <div class="resultCount Countt"> <span id="count">0</span> รายการ</div>
-    </div>
-
-<header class="ca">
-    </header>
-
-  <div class="wrap">
-    <div class="disclaimer-box oolet">
-      <h3>❗️ ข้อควรทราบ: สินค้า Outlet</h3>
-      <p>สินค้าในหน้านี้เป็น "สินค้าตัวโชว์", "สินค้าที่มีตำหนิเล็กน้อย (ไม่มีผลต่อการใช้งาน)", หรือ "สินค้าที่ลูกค้าตีกลับ" (สภาพกล่องไม่สมบูรณ์) สินค้าทุกชิ้นใช้งานได้ 100% แต่จำหน่ายตามสภาพ (As-Is) และไม่สามารถเปลี่ยนหรือคืนได้ครับ</p>
-    </div>
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <span class="pill" style="background:#2563EB;">OUTLET SALE</span>
+    <span>สินค้า Outlet ลดราคาสูงสุด 50% • ใช้งานได้ 100% สภาพดีเยี่ยม</span>
   </div>
 
-  <div class="oolet">
-    <div class="filters">
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container-custom header-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">G</div>
+        <span>S GYVER</span>
+        <span class="tag">HOME</span>
+      </a>
+
+      <div class="header-search">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="search" placeholder="ค้นหาของแต่งบ้าน เช่น หิ้งพระ, ชั้นวางไม้...">
+        </div>
       </div>
+
+      <div class="header-actions">
+        <a href="Favorites.html" class="action-btn" aria-label="รายการโปรด">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <span class="badge-count fav-badge-count">0</span>
+        </a>
+
+        <button class="action-btn" data-open-cart aria-label="ตะกร้าสินค้า">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="badge-count cart-badge-count">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Nav Chips -->
+    <nav class="sub-nav">
+      <div class="container-custom sub-nav-inner">
+        <a href="index.html" class="nav-chip">🏠 หน้าแรก</a>
+        <a href="catalog.html" class="nav-chip">📦 สินค้าทั้งหมด</a>
+        <a href="catalog-3d.html" class="nav-chip">🧊 3D Showroom</a>
+        <a href="outlet.html" class="nav-chip active">🏷️ สินค้า Outlet <span class="chip-badge">SALE</span></a>
+        <a href="gallery.html" class="nav-chip">🖼️ แกลลอรี่ไอเดีย</a>
+        <a href="Favorites.html" class="nav-chip">❤️ รายการโปรด</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container-custom" style="padding-bottom: 70px;">
     
-  <section class="oolet">
-    <div id="product-grid-container" class="product-grid-container">
+    <div class="outlet-banner">
+      <div>
+        <span style="background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:4px; font-size:0.75rem; font-weight:700;">CLEARANCE CORNER</span>
+        <h1 style="margin-top:10px;">สินค้า Outlet & มีตำหนิเล็กน้อย</h1>
+        <p>สินค้าตัวโชว์หรือสินค้ามีตำหนิด้านผิวสัมผัสเล็กน้อย ไม่มีผลกระทบต่อความแข็งแรงหรือการใช้งาน คุ้มค่าในราคาสุดพิเศษ</p>
       </div>
-  </section>
+      <div>
+        <span style="font-size:3.5rem;">🏷️</span>
+      </div>
+    </div>
 
+    <div class="disclaimer-card">
+      <span style="font-size:1.3rem;">ℹ️</span>
+      <div>
+        <strong>ข้อควรทราบ:</strong> สินค้าในหมวดหมู่นี้จำหน่ายตามสภาพจริง (As-Is) โดยมีรูปถ่ายจุดตำหนิแนบให้ตรวจสอบในหน้ารายละเอียด และไม่สามารถเปลี่ยนหรือคืนสินค้าได้
+      </div>
+    </div>
 
-    <hr>
-    <footer>
-        <div class="footer">© 2025 Gyver Home · งานออกแบบทำมือ / รับสั่งทำ · ติดต่อ: Sgyver36@gmail.com</div>
-    </footer>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <span id="count" style="font-weight:600; color:var(--ink-secondary);">กำลังโหลดสินค้า Outlet...</span>
+      <a href="catalog.html" style="font-size:0.9rem; color:var(--wood-dark); font-weight:600;">ดูสินค้าเกรด A ปกติ →</a>
+    </div>
 
-    <script src="JS/Filters.js"></script>
-    <script src="JS/outlet-products.js"></script>
+    <!-- Product Grid -->
+    <div id="product-grid-container" class="product-grid">
+      <!-- Populated by JS -->
+    </div>
 
+  </main>
+
+  <!-- Mobile Bottom Bar -->
+  <div class="mobile-bottom-bar">
+    <a href="index.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+      <span>หน้าแรก</span>
+    </a>
+    <a href="catalog.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span>สินค้า</span>
+    </a>
+    <a href="catalog-3d.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+      <span>3D</span>
+    </a>
+    <a href="Favorites.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <span>โปรด</span>
+    </a>
+    <a href="#" class="mobile-nav-item" data-open-cart>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      <span>ตะกร้า</span>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container-custom">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="brand-logo" style="color: #fff; margin-bottom: 16px;">
+            <div class="logo-icon">G</div>
+            <span>S GYVER</span>
+            <span class="tag">HOME</span>
+          </div>
+          <p style="line-height: 1.7; max-width: 340px;">
+            เฟอร์นิเจอร์และของแต่งบ้านงานไม้แฮนด์เมด ออกแบบด้วยความประณีต ผสมผสานเสน่ห์ความอบอุ่นแบบธรรมชาติเข้ากับการอยู่อาศัยยุคใหม่
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>หมวดหมู่สินค้า</h4>
+          <ul>
+            <li><a href="catalog.html?cat=ชั้นวาง">ชั้นวางของ & ชั้นโชว์</a></li>
+            <li><a href="catalog.html?cat=หิ้งพระ">หิ้งพระมินิมอล</a></li>
+            <li><a href="catalog.html?cat=ชั้นแขวน">ชั้นแขวนผนัง</a></li>
+            <li><a href="catalog-3d.html">โมเดล 3D เสมือนจริง</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>บริการ & ช่วยเหลือ</h4>
+          <ul>
+            <li><a href="index.html#mto">สั่งผลิตตามขนาด (Made to Order)</a></li>
+            <li><a href="gallery.html">ไอเดียการจัดห้อง</a></li>
+            <li><a href="outlet.html">สินค้า Outlet ราคาพิเศษ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>ติดต่อร้านค้า</h4>
+          <p style="margin-bottom: 8px;">อีเมล: Sgyver36@gmail.com</p>
+          <p style="margin-bottom: 8px;">LINE ID: @sgyver</p>
+          <p>เวลาทำการ: ทุกวัน 09:00 - 18:00 น.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 S GYVER Home. All rights reserved. Handcrafted with care.</div>
+        <div>Minimalist & Warm Living Solutions</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="JS/store.js"></script>
+  <script src="JS/outlet-products.js"></script>
 </body>
 
 </html>

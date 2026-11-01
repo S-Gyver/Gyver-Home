@@ -1,404 +1,330 @@
-// ----------------------- config / globals -----------------------
-const PRODUCTS_URL = "JSON/products.json";
-const VARIANTS_URL = "JSON/variants.json";
-
-// ดึง pid จาก query string เช่น product.html?id=S012
-const PID = new URLSearchParams(location.search).get("id") || "";
-
-// เก็บสถานะ runtime
-let PRODUCT = null;                // object สินค้าจาก products.json
-let VARIANTS_BY_ID = {};           // object ทั้งก้อนจาก variants.json
-let CURRENT_VARIANT_INDEX = 0;     // index ของตัวเลือกที่ถูกเลือกตอนนี้
-let BASE_DIR = "";                 // โฟลเดอร์รูปของสินค้านั้น เช่น "image/products/S012/"
-let GALLERY_IMAGES = [];           // list รูปทั้งหมดที่จะแสดงในแกลเลอรี่
-
-// ----------------------- helpers -----------------------
-const $  = (sel, root = document) => root.querySelector(sel);
-const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
-
-function numberWithCommas(n) {
-  // ป้องกัน undefined/null
-  const num = Number(n);
-  if (isNaN(num)) return n ?? "";
-  return num.toLocaleString("th-TH");
-}
-
-function calcDiscountPercent(price, salePrice) {
-  const p = Number(price);
-  const s = Number(salePrice);
-  if (!p || !s || s >= p) return 0;
-  const off = ((p - s) / p) * 100;
-  return Math.round(off);
-}
-
-// พยายามเดาโฟลเดอร์รูปจาก product / variant
-function getBaseDirFromProduct(product) {
-  // ถ้ามี product.images แล้ว path ดูเป็น "image/products/S012/xxx.jpg"
-  // เราจะตัดให้เหลือ "image/products/S012/"
-  if (product && Array.isArray(product.images) && product.images[0]) {
-    const first = product.images[0];
-    const slashIdx = first.lastIndexOf("/");
-    if (slashIdx > 0) {
-      return first.substring(0, slashIdx + 1);
-    }
-  }
-
-  // ถ้าไม่มี ลองดูจาก variants.json ตัวแรก
-  const vlist = VARIANTS_BY_ID[PID];
-  if (vlist && vlist[0] && vlist[0].image) {
-    const img = vlist[0].image;
-    const slashIdx = img.lastIndexOf("/");
-    if (slashIdx > 0) {
-      return img.substring(0, slashIdx + 1);
-    }
-  }
-
-  // fallback
-  return "";
-}
-
-// รวมรูปที่จะใช้ทำแกลเลอรี่
-function buildGalleryImages(product, variantsArr) {
-  const out = new Set();
-
-  // 1) รูปจากสินค้า (เช่นภาพหลัก/ภาพบรรยากาศ)
-  if (product && Array.isArray(product.images)) {
-    product.images.forEach(src => {
-      if (src) out.add(src);
-    });
-  }
-
-  // 2) รูปจากแต่ละ variant (เช่นมุมที่ใช้ประกอบ)
-  if (Array.isArray(variantsArr)) {
-    variantsArr.forEach(v => {
-      if (v && v.image) out.add(v.image);
-    });
-  }
-
-  return [...out];
-}
-
-// ----------------------- render funcs -----------------------
-function renderTitle(product) {
-  // ชื่อสินค้า
-  $("#pTitle").textContent = product.name || "ไม่มีชื่อสินค้า";
-
-  // rating / sold / reviews ถ้ามีใน products.json
-  if (product.rating) {
-    $("#pRating").textContent = product.rating.toFixed
-      ? product.rating.toFixed(1)
-      : product.rating;
-  }
-  if (product.reviewsCount != null) {
-    $("#pReviews").textContent = `รีวิว ${numberWithCommas(product.reviewsCount)}`;
-  }
-  if (product.sold != null) {
-    $("#pSold").textContent = `ขายแล้ว ${numberWithCommas(product.sold)}`;
-  }
-}
-
-function renderGallery(product) {
-  const mainImgEl = $("#mainImg");
-  const thumbsWrap = $("#thumbs");
-
-  thumbsWrap.innerHTML = ""; // reset
-
-  // เตรียม list รูปทั้งหมดของสินค้า
-  GALLERY_IMAGES = buildGalleryImages(product, VARIANTS_BY_ID[PID]);
-
-  // ถ้ายังไม่มีรูปเลย ก็ใช้ placeholder
-  if (!GALLERY_IMAGES.length) {
-    GALLERY_IMAGES = ["image/placeholder.jpg"];
-  }
-
-  // ตั้งรูปหลักเป็นรูปแรก
-  mainImgEl.src = GALLERY_IMAGES[0];
-  mainImgEl.alt = product?.name || "รูปสินค้า";
-
-  // สร้าง thumbnail buttons
-  GALLERY_IMAGES.forEach((src, idx) => {
-    const btn = document.createElement("button");
-    btn.className = "thumb" + (idx === 0 ? " active" : "");
-    btn.setAttribute("type", "button");
-
-    const img = document.createElement("img");
-    img.src = src;
-    img.alt = `ภาพ ${idx + 1}`;
-
-    btn.appendChild(img);
-
-    btn.addEventListener("click", () => {
-      // อัปเดตรูปหลัก
-      mainImgEl.src = src;
-      // เปลี่ยน active
-      $$(".thumb", thumbsWrap).forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-    });
-
-    thumbsWrap.appendChild(btn);
-  });
-}
-
-// วาดปุ่มตัวเลือกสินค้า (variants)
-function renderVariantChips(pid) {
-  const box = $("#variantBox");
-  const wrap = $("#variantOptions");
-
-  const list = VARIANTS_BY_ID[pid] || [];
-
-  // ถ้าไม่มี variant (list ว่าง) ก็ซ่อนกล่อง
-  if (!list.length) {
-    box.style.display = "none";
-    return;
-  }
-
-  wrap.innerHTML = "";
-
-  list.forEach((v, idx) => {
-    const btn = document.createElement("button");
-    btn.className = "chip" + (idx === 0 ? " active" : "");
-    btn.type = "button";
-    btn.textContent = v.label || `แบบ ${idx + 1}`;
-
-    btn.addEventListener("click", () => {
-      CURRENT_VARIANT_INDEX = idx;
-      // toggle active
-      $$(".chip", wrap).forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      // อัปเดตราคา/stock/รูปหลักตาม variant ที่เลือก
-      updatePriceAndBadge();
-      updateStockHint();
-      updateGalleryForVariant(idx);
-    });
-
-    wrap.appendChild(btn);
-  });
-
-  // เริ่มต้นใช้ตัวเลือกตัวแรก
-  CURRENT_VARIANT_INDEX = 0;
-  updateStockHint();
-}
-
-// เวลาเลือกตัวเลือก เปลี่ยนรูปหลักให้ตรงกับ variant ด้วย (ถ้า variant มี image)
-function updateGalleryForVariant(idx) {
-  const v = getCurrentVariant();
-  if (!v || !v.image) return;
-
-  const mainImgEl = $("#mainImg");
-
-  mainImgEl.src = v.image;
-
-  // ทำ active ให้ thumbnail ที่ตรงกับ v.image ถ้ามี
-  const thumbsWrap = $("#thumbs");
-  $$(".thumb", thumbsWrap).forEach(b => {
-    const img = $("img", b);
-    if (img && img.src && img.src.includes(v.image.replace(/^.*[\\/]/, ""))) {
-      b.classList.add("active");
-    } else {
-      b.classList.remove("active");
-    }
-  });
-}
-
-// ดึง variant ปัจจุบัน
-function getCurrentVariant() {
-  const list = VARIANTS_BY_ID[PID] || [];
-  if (!list.length) return null;
-  return list[CURRENT_VARIANT_INDEX] || list[0];
-}
-
-// อัปเดตราคา / badge / ราคาขีดฆ่า
-function updatePriceAndBadge() {
-  const variant = getCurrentVariant();
-
-  // มีกรณี: ไม่มี variant -> ลอง fallback ไปที่ PRODUCT เอง
-  const priceNow  = variant?.salePrice ?? PRODUCT?.salePrice ?? PRODUCT?.price;
-  const priceFull = variant?.price      ?? PRODUCT?.price;
-
-  $("#priceMain").textContent   = "฿" + numberWithCommas(priceNow || "-");
-  $("#priceStrike").textContent = priceFull && priceFull !== priceNow
-    ? "฿" + numberWithCommas(priceFull)
-    : "";
-
-  // ส่วนลด %
-  const off = calcDiscountPercent(priceFull, priceNow);
-  $("#badgeOff").textContent = off > 0 ? `-${off}%` : "";
-}
-
-function updateStockHint() {
-  const variant = getCurrentVariant();
-  const stockNum = variant?.stock ?? PRODUCT?.stock;
-
-  const stockHintEl = $("#pStockHint");
-  const stockInfoEl = $("#product-stock");
-
-  if (stockNum == null) {
-    stockHintEl.textContent = "มีสินค้า";
-    stockInfoEl.textContent = "ไม่ระบุ";
-  } else {
-    stockHintEl.textContent = stockNum > 0
-      ? `พร้อมส่ง (${stockNum} ชิ้น)`
-      : "สินค้าหมดแล้ว";
-
-    stockInfoEl.textContent = stockNum + " ชิ้น";
-  }
-}
-
-// เติมรายละเอียด product ด้านล่าง เช่นหมวดหมู่ / desc
-function renderDetails(product) {
-  // หมวดหมู่
-  const catEl = $("#product-categories");
-  if (catEl) {
-    if (Array.isArray(product.categories)) {
-      catEl.textContent = product.categories.join(" / ");
-    } else if (product.category) {
-      catEl.textContent = product.category;
-    } else {
-      catEl.textContent = "—";
-    }
-  }
-
-  // รายละเอียดสินค้า (HTML description)
-  const descEl = $("#product-description");
-  if (descEl) {
-    // บางร้านอาจเก็บ desc เป็น text ธรรมดา หรือมี <br>
-    descEl.innerHTML = product.desc || "";
-  }
-}
-
-// ----------------------- qty controls -----------------------
-function setupQtyButtons() {
-  const qtyInput = $("#qty");
-  const minusBtn = $('.qtyBtn[data-act="minus"]');
-  const plusBtn  = $('.qtyBtn[data-act="plus"]');
-
-  if (!qtyInput) return;
-
-  minusBtn?.addEventListener("click", () => {
-    const current = parseInt(qtyInput.value || "1", 10);
-    const next = Math.max(1, current - 1);
-    qtyInput.value = next;
-  });
-
-  plusBtn?.addEventListener("click", () => {
-    const current = parseInt(qtyInput.value || "1", 10);
-    const next = current + 1;
-    qtyInput.value = next;
-  });
-}
-
-// ----------------------- share / misc -----------------------
-function setupShareAndCart() {
-  // ปุ่มคัดลอกลิงก์
-  const copyBtn = $("#copyLink");
-  copyBtn?.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(location.href);
-      copyBtn.textContent = "คัดลอกแล้ว";
-      setTimeout(() => {
-        copyBtn.textContent = "คัดลอกลิงก์";
-      }, 2000);
-    } catch (err) {
-      console.warn("copy failed", err);
-    }
-  });
-
-  // TODO: ปุ่มตะกร้า / ซื้อสินค้า / แชตกับร้าน
-  // ตรงนี้เอาเบาๆ ไว้ก่อน
-  $("#addCart")?.addEventListener("click", () => {
-    const v = getCurrentVariant();
-    const qty = parseInt($("#qty").value || "1", 10);
-    console.log("add to cart", {
-      productId: PID,
-      variant: v?.label || null,
-      qty
-    });
-    alert("เพิ่มลงตะกร้าแล้ว");
-  });
-
-  $("#buyNow")?.addEventListener("click", () => {
-    const v = getCurrentVariant();
-    const qty = parseInt($("#qty").value || "1", 10);
-    console.log("buy now", {
-      productId: PID,
-      variant: v?.label || null,
-      qty
-    });
-    alert("กำลังไปหน้าเช็คเอาท์…");
-  });
-
-  $("#chat")?.addEventListener("click", () => {
-    alert("เปิดแชตกับร้าน (เดโม่)");
-  });
-}
-
-// ----------------------- boot -----------------------
-(async function init() {
-  if (!PID) {
-    // ถ้าไม่มี id ใน URL
-    $("#pTitle").textContent = "ไม่พบสินค้า (ไม่มี id ในลิงก์)";
-    return;
-  }
-
-  // โหลด products + variants
-  const [pRes, vRes] = await Promise.all([
-    fetch(PRODUCTS_URL, { cache: "no-store" }),
-    fetch(VARIANTS_URL, { cache: "no-store" })
-  ]);
-
-  const allProducts = pRes.ok ? await pRes.json() : [];
-  VARIANTS_BY_ID    = vRes.ok ? await vRes.json() : {};
-
-  // หา product ตาม id
-  PRODUCT = allProducts.find(
-    p => (p.id || "").toUpperCase() === PID.toUpperCase()
-  );
-
-  if (!PRODUCT) {
-    $("#pTitle").textContent = `ไม่พบสินค้า (id: ${PID})`;
-    return;
-  }
-
-  // set BASE_DIR จากรูปสินค้า/variant
-  BASE_DIR = getBaseDirFromProduct(PRODUCT);
-
-  // render ส่วนต่างๆ
-  renderTitle(PRODUCT);
-  renderGallery(PRODUCT);
-  renderVariantChips(PID);
-  updatePriceAndBadge();
-  updateStockHint();
-  renderDetails(PRODUCT);
-
-  // functional ปุ่มจำนวน / แชร์ / ตะกร้า
-  setupQtyButtons();
-  setupShareAndCart();
-})();
-
-// เลือกปุ่มทั้งหมดที่เป็นปุ่มจำนวน
-const qtyInput = document.getElementById("qty");
-const qtyBtns = document.querySelectorAll(".qbtn");
-
-qtyBtns.forEach(btn => {
-  btn.addEventListener("click", () => {
-    const action = btn.getAttribute("data-act"); // "plus" หรือ "minus"
-    let current = parseInt(qtyInput.value, 10);
-
-    if (isNaN(current)) {
-      current = 1; // กันเผื่อมีคนลบค่าทิ้ง
-    }
-
-    if (action === "plus") {
-      current = current + 1;
-    } else if (action === "minus") {
-      // อย่าให้ต่ำกว่า min (ถ้ามี)
-      const min = parseInt(qtyInput.getAttribute("min"), 10) || 1;
-      if (current > min) {
-        current = current - 1;
-      }
-    }
-
-    qtyInput.value = current;
-  });
+/* ==========================================================================
+   Gyver Home — Product Detail Page Controller
+   ========================================================================== */
+
+const PID = new URLSearchParams(window.location.search).get("id") || "";
+
+let currentProduct = null;
+let variantsList = [];
+let selectedVariant = null;
+let currentQty = 1;
+
+document.addEventListener("DOMContentLoaded", () => {
+  initProductPage();
 });
+
+async function initProductPage() {
+  if (!PID) {
+    document.getElementById("product-title").textContent = "ไม่พบรหัสสินค้า (กรุณาเลือกสินค้าจากหน้าแคตตาล็อก)";
+    return;
+  }
+
+  try {
+    const [pRes, vRes] = await Promise.all([
+      fetch("JSON/products.json"),
+      fetch("JSON/variants.json")
+    ]);
+
+    const allProducts = pRes.ok ? await pRes.json() : [];
+    const allVariants = vRes.ok ? await vRes.json() : {};
+
+    currentProduct = allProducts.find(p => p.id.toUpperCase() === PID.toUpperCase());
+    variantsList = allVariants[PID] || [];
+
+    if (!currentProduct) {
+      document.getElementById("product-title").textContent = `ไม่พบสินค้ารหัส ${PID}`;
+      return;
+    }
+
+    renderProductDetails(currentProduct);
+    renderGallery(currentProduct, variantsList);
+    renderVariants(variantsList);
+    setupActionButtons();
+    renderRelatedProducts(allProducts);
+
+  } catch (err) {
+    console.error("Error loading product:", err);
+  }
+}
+
+function renderProductDetails(product) {
+  // Title & SKU
+  document.title = `${product.name} — Gyver Home`;
+  document.getElementById("product-title").textContent = product.name;
+  document.getElementById("product-sku").textContent = `รหัสสินค้า: ${product.id}`;
+  
+  const catEl = document.getElementById("product-category-crumb");
+  if (catEl && product.category) {
+    catEl.textContent = Array.isArray(product.category) ? product.category.join(" • ") : product.category;
+  }
+
+  // Rating & Sold
+  const ratingEl = document.getElementById("product-rating");
+  if (ratingEl) ratingEl.textContent = (product.rating || 4.9).toFixed(1);
+
+  const soldEl = document.getElementById("product-sold");
+  if (soldEl) soldEl.textContent = `ขายแล้ว ${(product.sold || 0).toLocaleString("th-TH")} ชิ้น`;
+
+  // Description
+  const descEl = document.getElementById("product-desc-text");
+  if (descEl) {
+    descEl.textContent = product.desc || "ชิ้นงานไม้แท้แฮนด์เมด ผ่านการคัดสรรเกรดไม้ ขัดผิวเนียนเรียบ และเคลือบสารกันน้ำกันเชื้อรา คงทน สวยงาม เหมาะสำหรับการตกแต่งบ้านทุกสไตล์";
+  }
+
+  // Update Wishlist button state
+  const favBtn = document.getElementById("btn-product-fav");
+  if (favBtn) {
+    favBtn.setAttribute("data-fav-id", product.id);
+    updateFavButtonUI(favBtn, GyverStore.isFavorite(product.id));
+    favBtn.addEventListener("click", () => {
+      GyverStore.toggleFavorite(product);
+      updateFavButtonUI(favBtn, GyverStore.isFavorite(product.id));
+    });
+  }
+
+  updatePriceUI();
+}
+
+function updateFavButtonUI(btn, isFav) {
+  if (isFav) {
+    btn.classList.add("active");
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+      <span>บันทึกแล้วในรายการโปรด</span>
+    `;
+  } else {
+    btn.classList.remove("active");
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+      <span>บันทึกในรายการโปรด</span>
+    `;
+  }
+}
+
+function renderGallery(product, variants) {
+  const mainImg = document.getElementById("main-product-img");
+  const thumbsContainer = document.getElementById("gallery-thumbs");
+  if (!mainImg || !thumbsContainer) return;
+
+  const images = new Set();
+  if (Array.isArray(product.images)) {
+    product.images.forEach(img => img && images.add(img));
+  }
+  if (Array.isArray(variants)) {
+    variants.forEach(v => v && v.image && images.add(v.image));
+  }
+
+  const imgList = images.size > 0 ? [...images] : ["image/placeholder.jpg"];
+
+  // Set default main image
+  mainImg.src = imgList[0];
+  thumbsContainer.innerHTML = "";
+
+  imgList.forEach((src, idx) => {
+    const thumb = document.createElement("button");
+    thumb.className = `thumb-btn ${idx === 0 ? "active" : ""}`;
+    thumb.innerHTML = `<img src="${src}" alt="มุมมอง ${idx + 1}" onerror="this.src='image/placeholder.jpg'">`;
+    thumb.addEventListener("click", () => {
+      mainImg.src = src;
+      thumbsContainer.querySelectorAll(".thumb-btn").forEach(t => t.classList.remove("active"));
+      thumb.classList.add("active");
+    });
+    thumbsContainer.appendChild(thumb);
+  });
+}
+
+function renderVariants(variants) {
+  const container = document.getElementById("variant-options-box");
+  const variantSection = document.getElementById("variant-selection-section");
+  if (!container || !variantSection) return;
+
+  if (!variants || variants.length === 0) {
+    variantSection.style.display = "none";
+    return;
+  }
+
+  variantSection.style.display = "block";
+  container.innerHTML = "";
+
+  // Set first variant as default
+  selectedVariant = variants[0];
+
+  variants.forEach((v, idx) => {
+    const btn = document.createElement("button");
+    btn.className = `variant-chip ${idx === 0 ? "active" : ""}`;
+    btn.textContent = v.label || `แบบ ${idx + 1}`;
+    btn.addEventListener("click", () => {
+      selectedVariant = v;
+      container.querySelectorAll(".variant-chip").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      // If variant has specific image, switch main img
+      if (v.image) {
+        const mainImg = document.getElementById("main-product-img");
+        if (mainImg) mainImg.src = v.image;
+      }
+
+      updatePriceUI();
+    });
+    container.appendChild(btn);
+  });
+}
+
+function updatePriceUI() {
+  const currentPriceEl = document.getElementById("price-current-display");
+  const origPriceEl = document.getElementById("price-orig-display");
+  const badgeEl = document.getElementById("badge-discount-display");
+  if (!currentPriceEl) return;
+
+  let basePrice = currentProduct.price;
+  let salePrice = currentProduct.salePrice;
+
+  // If variant overrides price
+  if (selectedVariant) {
+    if (selectedVariant.price !== undefined) basePrice = selectedVariant.price;
+    if (selectedVariant.salePrice !== undefined) salePrice = selectedVariant.salePrice;
+  }
+
+  const hasSale = salePrice && salePrice < basePrice;
+  const finalPrice = hasSale ? salePrice : basePrice;
+
+  currentPriceEl.textContent = `฿${Number(finalPrice).toLocaleString("th-TH")}`;
+
+  if (hasSale) {
+    const discount = Math.round(((basePrice - salePrice) / basePrice) * 100);
+    origPriceEl.style.display = "inline";
+    origPriceEl.textContent = `฿${Number(basePrice).toLocaleString("th-TH")}`;
+    badgeEl.style.display = "inline-block";
+    badgeEl.textContent = `ประหยัด ${discount}%`;
+  } else {
+    origPriceEl.style.display = "none";
+    badgeEl.style.display = "none";
+  }
+}
+
+function setupActionButtons() {
+  // Quantity buttons
+  const qtyInput = document.getElementById("product-qty-input");
+  const btnMinus = document.getElementById("btn-qty-minus");
+  const btnPlus = document.getElementById("btn-qty-plus");
+
+  if (btnMinus && btnPlus && qtyInput) {
+    btnMinus.addEventListener("click", () => {
+      if (currentQty > 1) {
+        currentQty--;
+        qtyInput.value = currentQty;
+      }
+    });
+
+    btnPlus.addEventListener("click", () => {
+      currentQty++;
+      qtyInput.value = currentQty;
+    });
+
+    qtyInput.addEventListener("change", () => {
+      const val = parseInt(qtyInput.value, 10);
+      currentQty = isNaN(val) || val < 1 ? 1 : val;
+      qtyInput.value = currentQty;
+    });
+  }
+
+  // Add to cart
+  const addCartBtn = document.getElementById("btn-add-to-cart");
+  if (addCartBtn) {
+    addCartBtn.addEventListener("click", () => {
+      let finalPrice = currentProduct.salePrice || currentProduct.price;
+      if (selectedVariant && selectedVariant.salePrice) finalPrice = selectedVariant.salePrice;
+      else if (selectedVariant && selectedVariant.price) finalPrice = selectedVariant.price;
+
+      GyverStore.addToCart({
+        id: currentProduct.id,
+        name: currentProduct.name,
+        price: finalPrice,
+        originalPrice: currentProduct.price,
+        image: currentProduct.images?.[0] || selectedVariant?.image || "image/placeholder.jpg",
+        variant: selectedVariant?.label || null,
+        quantity: currentQty
+      }, true); // opens drawer
+    });
+  }
+
+  // Buy now
+  const buyNowBtn = document.getElementById("btn-buy-now");
+  if (buyNowBtn) {
+    buyNowBtn.addEventListener("click", () => {
+      let finalPrice = currentProduct.salePrice || currentProduct.price;
+      if (selectedVariant && selectedVariant.salePrice) finalPrice = selectedVariant.salePrice;
+      else if (selectedVariant && selectedVariant.price) finalPrice = selectedVariant.price;
+
+      GyverStore.addToCart({
+        id: currentProduct.id,
+        name: currentProduct.name,
+        price: finalPrice,
+        originalPrice: currentProduct.price,
+        image: currentProduct.images?.[0] || selectedVariant?.image || "image/placeholder.jpg",
+        variant: selectedVariant?.label || null,
+        quantity: currentQty
+      }, true);
+    });
+  }
+
+  // Copy link
+  const copyBtn = document.getElementById("btn-copy-link");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        GyverStore.showToast("คัดลอกลิงก์สินค้าเรียบร้อยแล้ว");
+      });
+    });
+  }
+}
+
+function renderRelatedProducts(allProducts) {
+  const container = document.getElementById("related-products-grid");
+  if (!container) return;
+
+  const related = allProducts
+    .filter(p => p.id !== PID && p.images && p.images.length > 0)
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 4);
+
+  container.innerHTML = "";
+
+  related.forEach(product => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+
+    const finalPrice = product.salePrice || product.price;
+    const hasSale = product.salePrice && product.salePrice < product.price;
+    const imgUrl = product.images?.[0] || "image/placeholder.jpg";
+
+    card.innerHTML = `
+      <div class="card-media-wrap">
+        <a href="product.html?id=${product.id}">
+          <img src="${imgUrl}" alt="${product.name}" onerror="this.src='image/placeholder.jpg'">
+        </a>
+      </div>
+      <div class="card-body">
+        <a href="product.html?id=${product.id}" class="card-title">${product.name}</a>
+        <div class="card-price-row">
+          <div class="card-prices">
+            <span class="price-current">฿${Number(finalPrice).toLocaleString("th-TH")}</span>
+            ${hasSale ? `<span class="price-original">฿${Number(product.price).toLocaleString("th-TH")}</span>` : ""}
+          </div>
+          <button class="card-quick-add" onclick='GyverStore.addToCart({ id: "${product.id}", name: "${product.name}", price: ${finalPrice}, image: "${imgUrl}" })'>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}

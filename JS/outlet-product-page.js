@@ -328,28 +328,34 @@ function setupShareAndCart() {
     }
   });
 
-  // TODO: ปุ่มตะกร้า / ซื้อสินค้า / แชตกับร้าน
-  // ตรงนี้เอาเบาๆ ไว้ก่อน
   $("#addCart")?.addEventListener("click", () => {
     const v = getCurrentVariant();
     const qty = parseInt($("#qty").value || "1", 10);
-    console.log("add to cart", {
-      productId: PID,
+    const price = PRODUCT.salePrice || PRODUCT.price;
+    GyverStore.addToCart({
+      id: PRODUCT.id,
+      name: `[Outlet] ${PRODUCT.name}`,
+      price: price,
+      originalPrice: PRODUCT.price,
+      image: (PRODUCT.images && PRODUCT.images[0]) || "image/placeholder.jpg",
       variant: v?.label || null,
-      qty
-    });
-    alert("เพิ่มลงตะกร้าแล้ว");
+      quantity: qty
+    }, true);
   });
 
   $("#buyNow")?.addEventListener("click", () => {
     const v = getCurrentVariant();
     const qty = parseInt($("#qty").value || "1", 10);
-    console.log("buy now", {
-      productId: PID,
+    const price = PRODUCT.salePrice || PRODUCT.price;
+    GyverStore.addToCart({
+      id: PRODUCT.id,
+      name: `[Outlet] ${PRODUCT.name}`,
+      price: price,
+      originalPrice: PRODUCT.price,
+      image: (PRODUCT.images && PRODUCT.images[0]) || "image/placeholder.jpg",
       variant: v?.label || null,
-      qty
-    });
-    alert("กำลังไปหน้าเช็คเอาท์…");
+      quantity: qty
+    }, true);
   });
 
   $("#chat")?.addEventListener("click", () => {
